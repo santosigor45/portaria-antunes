@@ -5,7 +5,16 @@ const STATIC_ASSETS = [
     '/home',
     '/registros_empresa',
     '/registros_visitantes',
-    'static/'
+    'static/style.css',
+    'static/main.js',
+    'static/images/editar.png',
+    'static/images/logo_text.png',
+    'static/images/pesquisar.png',
+    'static/images/veiculo.png',
+    'static/images/visitantes.png',
+    'static/icons/user.svg',
+    'static/manifest.json'
+
 ];
 
 function checkServerAvailability() {
