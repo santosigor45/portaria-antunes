@@ -110,16 +110,17 @@
 
             $('#editForm').on('submit', function(e) {
                 e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    url: '/atualizar/placas',
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
+                var formData = new FormData(this);
+                sendDataToServer('/atualizar/placas', formData, 'POST')
+                    .then(({ success }) => {
+                        console.log(success);
                         $('#editModal').modal('hide');
                         table.ajax.reload();
-                    }
-                });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        return
+                    });
             });
 
             setupPlacaInput('editPlaca');

@@ -64,14 +64,16 @@
     <script>
         var isAdmin = {{ current_user.is_admin | tojson }};
 
-        setTimeout(function() {
-            toggler = document.querySelector('.navbar-toggler');
-            toggler.addEventListener('blur', function() {
+
+        toggler = document.querySelector('.navbar-toggler');
+        toggler.addEventListener('blur', function() {
+            setTimeout(function() {
                 if (!toggler.classList.contains('collapsed')) {
                     toggler.click();
                 };
-            });
-        }, 300);
+            }, 150);
+        });
+
 
         if ('{{ current_user.is_manager }}' == 'False') {
               showHiddenDiv(['list-editar'], ['add']);
