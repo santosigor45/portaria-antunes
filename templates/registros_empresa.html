@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Veículos da empresa
+{% endblock %}
+
+{% block content %}
+    {% include 'flash.html' %}
+    <div class="container">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <img src="{{ url_for('static', filename='images/veiculo.png')}}" style="max-width: 30%; height: auto; margin-right: 20px; margin-left: -10px; " alt="icone-veiculo" />
+            <h1>Veículos da empresa</h1>
+        </div>
+        <form action="/processar_formulario" method="post" id="registros_empresa" class="dados" autocomplete="off">
+            <label>Categoria</label>
+            <div class="button-container">
+                <input type="radio" class="btn-check" name="categoria" id="entrada" value="entrada" autocomplete="off" required/>
+                <label class="btn btn-secondary label-entrada" for="entrada" style="margin-right: 5px;" onclick="showEnterExitOptions('.entrada')">Entrada</label>
+
+                <input type="radio" class="btn-check" name="categoria" id="saida" value="saida" autocomplete="off"/>
+                <label class="btn btn-secondary label-saida" for="saida" onclick="showEnterExitOptions('.saida')">Saída</label>
+            </div>
+            <div class="form-group" style="display: flex;">
+                <div class="form-group">
+                    <label for="data">Data</label>
+                    <input type="date" class="form-control" id="data" name="data" required>
+                </div>
+                <div class="form-group" style="margin-left: 5px;">
+                    <label for="hora">Hora</label>
+                    <input type="time" class="form-control" id="hora" name="hora" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="motorista">Motorista</label>
+                <input type="text" class="form-control" id="motorista" name="motorista" required>
+                <div id="motoristaOptions" class="dynamic-options">
+                    {% for motorista in motoristas %}
+                        <div class="dynamic-option">{{ motorista.motorista }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="placa">Placa</label>
+                <input type="text" class="form-control" id="placa" onchange="setTimeout(verificarPlaca, 300)" pattern="[A-z]{3}-\d[A-j0-9]\d{2}" name="placa" maxlength="8" required>
+                <div id="placaOptions" class="dynamic-options">
+                    {% for placa in placas %}
+                        <div class="dynamic-option">{{ placa.placa }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group hidden" id="div-descricao">
+                <label for="descricao">Descrição</label>
+                <input class="form-control" id="descricao" name="descricao">
+            </div>
+            <div class="form-group">
+                <label for="quilometragem">Quilometragem</label>
+                <input type="number" class="form-control" id="quilometragem" name="quilometragem" required>
+            </div>
+            <div class="form-group hidden" id="container-destino">
+                <label>Destino</label>
+                <br>
+                <div class="button-container buttons-destino" onclick="showHiddenDiv(['observacoes-div'], ['remove']);">
+                    <input type="radio" class="btn-check" id="abastecimento" name="destino" value="abastecimento" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-abastecimento label-destino entrada" for="abastecimento">Abastecimento</label>
+
+                    <input type="radio" class="btn-check" id="posto" name="destino" value="posto" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-posto label-destino saida" for="posto">Posto de combustível</label>
+
+                    <input type="radio" class="btn-check" id="manutencao" name="destino" value="manutencao" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-manutencao label-destino entrada" for="manutencao">Manutenção</label>
+
+                    <input type="radio" class="btn-check" id="guardar" name="destino" value="guardar veiculo" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-guardar label-destino entrada" for="guardar">Guardar Veículo</label>
+
+                    <input type="radio" class="btn-check" id="linha" name="destino" value="linha" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-linha label-destino saida" for="linha">Linha</label>
+
+                    <input type="radio" class="btn-check" id="casa" name="destino" value="casa" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-casa label-destino saida" for="casa">Casa</label>
+
+                    <input type="radio" class="btn-check" id="socorro" name="destino" value="socorro" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-socorro label-destino saida" for="socorro">Socorro</label>
+
+                    <input type="radio" class="btn-check" id="teste" name="destino" value="teste" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-teste label-destino saida" for="teste">Teste</label>
+
+                    <input type="radio" class="btn-check" id="outros" name="destino" value="outros" autocomplete="off" required/>
+                    <label class="btn btn-secondary label-outros label-destino" for="outros" id="label-outros">Outros</label>
+                </div>
+                <div class="hidden" id="observacoes-div">
+                    <label for="observacoes">Observações</label>
+                    <textarea class="form-control" id="observacoes" name="observacoes" placeholder="Opcional"></textarea>
+                </div>
+            </div>
+            <div class="button-container" style="margin: 0;">
+                <button type="button" class="btn btn-danger btn-lg" id="limpar" onclick="confirmarLimpeza('registros_empresa');showHiddenDiv(['observacoes-div', 'container-destino'], ['add']);">Limpar</button>
+                <button type="submit" class="btn btn-success btn-lg" id="enviar-btn" style="margin-left: 5px;">Enviar</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            setupMotoristaInput();
+            setupPlacaInput();
+        });
+
+        $('#placa').on('blur', function() {
+            if ($('#saida').is(':checked')) {
+                setTimeout( function() {
+                    lastKm('placa', 'quilometragem');
+                }, 300);
+            };
+        });
+    </script>
+{% endblock %}

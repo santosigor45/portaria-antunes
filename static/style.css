@@ -1,0 +1,371 @@
+body {
+    background-color: #000;
+}
+
+h1 {
+    font-family: "Inconsolata", monospace;
+    font-weight: 900;
+    text-align: left;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 0px;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    width: 500px;
+    margin: 95px auto 20px auto;
+    border: 1px solid #000;
+    border-radius: 10px
+}
+
+.dynamic-options {
+    position: absolute;
+    display: none;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.dynamic-options.show {
+    display: block;
+    background: white;
+}
+
+.dynamic-option {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.button-container {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 15px;
+    display: flex;
+    text-align: center;
+}
+
+.btn-secondary {
+    font-weight: 500;
+    font-size: 15pt;
+}
+
+#entrada:checked ~ .label-entrada,
+#saida:checked ~ .label-saida,
+#abastecimento:checked ~ .label-abastecimento,
+#manutencao:checked ~ .label-manutencao,
+#linha:checked ~ .label-linha,
+#teste:checked ~ .label-teste,
+#outros:checked ~ .label-outros,
+#casa:checked ~ .label-casa,
+#socorro:checked ~ .label-socorro,
+#posto:checked ~ .label-posto,
+#guardar:checked ~ .label-guardar,
+#servico:checked ~ .label-servico,
+#entrega:checked ~ .label-entrega,
+#btn-empresa:checked ~ .label-empresa,
+#btn-visitantes:checked ~ .label-visitantes,
+#btn-placas:checked ~ .label-placas,
+#btn-motoristas:checked ~ .label-motoristas
+{
+    background-color: #0069D9;
+}
+
+.btn {
+    margin: 0;
+    width: 50%;
+    display: inline-block;
+}
+
+.buttons-destino {
+    display: block;
+    text-align: center;
+}
+
+.label-destino {
+    margin: 0 5px 10px 0;
+    font-size: 14pt;
+    max-width: 100%;
+    width: auto;
+}
+
+.navbar {
+    border-bottom: 3px solid #fff000;
+    font-size: 120%;
+    font-weight: 900;
+}
+
+.container-fluid {
+    overflow-y: auto;
+}
+
+.navbar-nav {
+    margin-top: 0.5rem;
+}
+
+.navbar-toggler {
+    margin-left: auto;
+}
+
+.nav-item {
+    white-space: nowrap;
+}
+
+.nav-link {
+    white-space: nowrap;
+    font-family: "Inconsolata", monospace;
+    margin-right: 30px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.div-menu {
+    text-align: center;
+    display: block;
+}
+
+.div-submenu {
+    display: inline-block;
+    width: 48%;
+    border: 2px solid #000000;
+    border-radius: 15px;
+    padding-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.div-submenu-text {
+    margin-bottom: 10px;
+}
+
+.div-submenu:active {
+    background-color: #cccccc;
+}
+
+.div-menu-item {
+    font-family: "Inconsolata", monospace;
+    color: #000000;
+    font-weight: 900;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#welcome_message {
+    font-weight: 900;
+    padding-top: 10px;
+}
+
+.messages {
+    font-family: "Inconsolata", monospace;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s ease-out;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+.modal-content {
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-body {
+    font-family: "Monaco", monospace;
+    font-weight: 600;
+}
+
+.flash-error {
+    background-color: #fab3ba;
+}
+
+.flash-text-error {
+    color: #73000b;
+}
+
+.flash-info {
+    background-color: #ffdc71;
+}
+
+.flash-text-info {
+    color: #694f00;
+}
+
+.flash-success {
+    background-color: #b6d7a8;
+}
+
+.flash-text-success {
+    color: #184600;
+}
+
+.logout {
+    margin-bottom: 5px;
+}
+
+.login-form {
+    text-align: left;
+}
+
+#div-preco {
+    flex-direction: column;
+}
+
+.input-preco {
+    position: relative;
+    display: inline-block;
+}
+
+.input-preco > i {
+    position: absolute;
+    display: block;
+    transform: translate(0, -50%);
+    top: 50%;
+    pointer-events: none;
+    width: 25px;
+    text-align: center;
+    font-style: normal;
+}
+
+#preco {
+    padding-left: 25px;
+    padding-right: 0px;
+}
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+}
+
+th {
+    background-color: gray;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.row {
+    overflow-y: auto;
+}
+
+.div-table {
+    text-align: center;
+    display: inline-block;
+    margin-top: 0px !important;
+    margin: 30px 5px;
+    max-width: 100%;
+}
+
+.div-date {
+    width: 400px;
+}
+
+
+#registros_empresa_length, #registros_empresa_info,
+#registros_visitantes_length, #registros_visitantes_info,
+#placas_length, #placas_info {
+    text-align: left;
+
+}
+
+#registros_empresa_filter, #registros_visitantes_filter,
+#placas_filter {
+    text-align: right;
+}
+
+#registros_empresa_length label, #registros_visitantes_info label,
+#placas_length label {
+    margin: 0;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 567px) {
+
+    .div-menu-item {
+        font-size: 3.7vw;
+    }
+
+    .nav-link {
+        margin-bottom: 10px;
+    }
+
+    .logout {
+        margin-top: 5px;
+    }
+
+    .messages {
+        font-size: 5vw;
+    }
+
+    .container {
+        width: 95% !important;
+    }
+
+    .div-table {
+        margin: 20px auto;
+    }
+
+    table {
+        width: 250%;
+    }
+
+    .edit-tables {
+        width: 100% !important;
+    }
+
+    th, td {
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    .div-date {
+        width: 300px;
+    }
+}

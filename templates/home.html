@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Portaria Antunes
+{% endblock %}
+
+{% block content %}
+    {% include 'flash.html' %}
+    <div class="container" style="padding: 10px;">
+        <div class="div-menu">
+            <p class="messages" id="welcome_message">{{ current_user.username|upper }}!</p>
+            <p class="messages">Selecione abaixo a opção desejada:</p>
+            <div class="div-submenu" style="margin-right: 5px; margin-bottom: 10px;">
+                <a href="{{ url_for('front_end.registros_empresa')}}" class="div-menu-item">
+                    <img src="{{ url_for('static', filename='images/veiculo.png')}}" style="max-width: 80%; height: auto;  margin-bottom: 10px;  filter: drop-shadow(5px 10px 5px gray); " alt="icone_veiculo" />
+                    <p class="div-submenu-text">Veículos da <br>empresa</p>
+                </a>
+            </div>
+            <div class="div-submenu" style="margin-bottom: 10px;">
+                <a href="{{ url_for('front_end.registros_visitantes')}}" class="div-menu-item">
+                    <img src="{{ url_for('static', filename='images/visitantes.png')}}" style="max-width: 80%; height: auto; margin-bottom: 10px; filter: drop-shadow(5px 10px 5px gray); " alt="icone_visitantes" />
+                    <p class="div-submenu-text"> <br>Visitantes</p>
+                </a>
+            </div>
+        </div>
+        <div class="div-menu">
+            <div class="div-submenu" style="margin-right: 5px;">
+                <a href="{{ url_for('front_end.pesquisar')}}" class="div-menu-item">
+                    <img src="{{ url_for('static', filename='images/pesquisar.png')}}" style="max-width: 80%; height: auto;  margin-bottom: 10px;  filter: drop-shadow(5px 10px 5px gray); " alt="icone_pesquisar" />
+                    <p class="div-submenu-text"> <br>Pesquisar</p>
+                </a>
+            </div>
+            <div class="div-submenu" id="div-editar">
+                <a href="{{ url_for('front_end.editar')}}" class="div-menu-item">
+                    <img src="{{ url_for('static', filename='images/editar.png')}}" style="max-width: 80%; height: auto; margin-bottom: 10px;  filter: drop-shadow(10px 5px 5px gray); " alt="icone_editar" />
+                    <p class="div-submenu-text"> <br>Editar</p>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker registrado com sucesso:', registration);
+                })
+                .catch((error) => {
+                    console.error('Erro ao registrar o Service Worker:', error);
+                });
+        };
+
+        if ('{{ current_user.is_manager }}' == 'False') {
+              showHiddenDiv(['div-editar'], ['add']);
+        };
+    </script>
+{% endblock %}

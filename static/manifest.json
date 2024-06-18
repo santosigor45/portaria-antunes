@@ -1,0 +1,36 @@
+{
+  "name": "Portaria Antunes",
+  "short_name": "Portaria Antunes",
+  "description": "Um pequeno aplicativo para auxiliar a portaria da empresa Antunes & Antunes Transporte Escolar.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000",
+  "theme_color": "#000",
+  "icons": [
+    {
+      "src": "/static/images/android/android-launchericon-512-512.png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/static/images/android/android-launchericon-192-192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/static/images/android/android-launchericon-144-144.png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/static/images/android/android-launchericon-96-96.png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/static/images/android/android-launchericon-72-72.png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/static/images/android/android-launchericon-48-48.png",
+      "sizes": "48x48"
+    }
+  ]
+}
