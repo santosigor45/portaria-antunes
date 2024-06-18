@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect, url_for, send_from_directory, jsonify
+from flask import render_template, request, flash, redirect, url_for, send_from_directory, jsonify, abort
 from werkzeug.security import check_password_hash
 from flask_login import login_user, logout_user, current_user
 from models import *
@@ -41,34 +41,6 @@ def editar_tables(table):
     return render_template(f'editar/editar_{table}.html')
 
 
-def atualizar(table):
-    data = request.form
-    if table == "placas":
-        placas = Placas.query.get(data['id']) or None
-        if not placas:
-            add_placa = Placas(
-                placa=data['placa'],
-                veiculo=data['veiculo']
-            )
-            db.session.add(add_placa)
-        else:
-            placas.placa = data['placa']
-            placas.veiculo = data['veiculo']
-    elif table == "motoristas":
-        motoristas = Motoristas.query.get(data['id'])
-        if not motoristas:
-            add_motorista = Motoristas(
-                motorista=data['motorista'],
-                cidade=data['cidade']
-            )
-            db.session.add(add_motorista)
-        else:
-            motoristas.motorista = data['motorista']
-            motoristas.cidade = data['cidade']
-    db.session.commit()
-    return jsonify({"success": True})
-
-
 def api_data(data):
     if data in ['placas', 'motoristas', 'visitantes']:
         return {
@@ -78,15 +50,20 @@ def api_data(data):
     query = db.session.query(table_object(table_name=data))
 
     if data == 'last_km':
-        placa = request.args.get('placa[value]')
-        query = RegistrosEmpresa.query.filter_by(placa=placa).order_by(
-            RegistrosEmpresa.id.desc()).first()
-        if query:
-            if query.categoria == "entrada":
-                last_km = query.quilometragem
-                return jsonify({'message': 'success', 'last_km': f'{last_km}'})
-        else:
-            return jsonify({'message': 'Nenhum dado encontrado'})
+        try:
+            placa = request.args.get('placa[value]')
+            query = RegistrosEmpresa.query.filter_by(placa=placa).order_by(
+                RegistrosEmpresa.id.desc()).first()
+            if query:
+                if query.categoria == "entrada":
+                    last_km = query.quilometragem
+                    return jsonify({'message': 'success', 'last_km': f'{last_km}'})
+                else:
+                    abort(404, description='Nenhum dado encontrado!')
+            else:
+                abort(404, description='Nenhum dado encontrado!')
+        except Exception as e:
+            abort(500, description=str(e))
 
     # search filter
     search = request.args.get('search[value]')
@@ -204,6 +181,28 @@ def processar_formulario():
                     empresa=dados_coletados.empresa
                 )
                 enviar_dados.append(registrar_visitante)
+
+        elif formulario_id == "editFormPlacas":
+            dados_coletados = Placas.query.get(request.form.get('id'))
+            if not dados_coletados:
+                dados_coletados = Placas(
+                    placa=request.form.get('placa'),
+                    veiculo=request.form.get('veiculo')
+                )
+            else:
+                dados_coletados.placa = request.form.get('placa')
+                dados_coletados.veiculo = request.form.get('veiculo')
+
+        elif formulario_id == "editFormMotoristas":
+            dados_coletados = Motoristas.query.get(request.form.get('id'))
+            if not dados_coletados:
+                dados_coletados = Motoristas(
+                    motorista=request.form.get('motorista'),
+                    cidade=request.form.get('cidade')
+                )
+            else:
+                dados_coletados.motorista = request.form.get('motorista')
+                dados_coletados.cidade = request.form.get('cidade')
 
         enviar_dados.append(dados_coletados)
 

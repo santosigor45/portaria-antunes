@@ -48,7 +48,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editForm">
+                    <form id="editFormPlacas" action="/processar_formulario" method="post" class="edit" autocomplete="off">
                         <div class="form-group hidden">
                             <label for="editId">ID</label>
                             <input type="text" class="form-control" id="editId" name="id" readonly>
@@ -108,19 +108,23 @@
                 $('#editModal').modal('show');
             });
 
-            $('#editForm').on('submit', function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                sendDataToServer('/atualizar/placas', formData, 'POST')
-                    .then(({ success }) => {
-                        console.log(success);
-                        $('#editModal').modal('hide');
-                        table.ajax.reload();
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        return
-                    });
+            document.querySelectorAll('form.edit').forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    var formData = new FormData(this);
+                    formData.append('formulario_id', form.getAttribute('id'));
+
+                    sendDataToServer('/processar_formulario', formData, form.getAttribute('method'))
+                        .then(({ message, type }) => {
+                            $('#editModal').modal('hide');
+                            exibirMensagemFlash(message, type);
+                            table.ajax.reload();
+                        })
+                        .catch(error => {
+                            $('#editModal').modal('hide');
+                            exibirMensagemFlash('Ocorreu um erro. Tente novamente mais tarde', 'error');
+                        });
+                });
             });
 
             setupPlacaInput('editPlaca');

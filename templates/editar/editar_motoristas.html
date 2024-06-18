@@ -48,18 +48,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editForm">
+                    <form id="editFormMotoristas" action="/processar_formulario" method="post" class="edit" autocomplete="off">
                         <div class="form-group hidden">
                             <label for="editId">ID</label>
                             <input type="text" class="form-control" id="editId" name="id" readonly>
                         </div>
                         <div class="form-group">
                             <label for="editMotorista">Motorista</label>
-                            <input type="text" class="form-control" id="editMotorista" name="motorista" autocomplete="off" style="display: flex; margin: auto; width: 70%;">
+                            <input type="text" class="form-control" id="editMotorista" name="motorista" style="display: flex; margin: auto; width: 70%;">
                         </div>
                         <div class="form-group">
                             <label for="editCidade">Cidade</label>
-                            <input type="text" class="form-control" id="editCidade" name="cidade" autocomplete="off" style="display: flex; margin: auto; width: 70%;">
+                            <input type="text" class="form-control" id="editCidade" name="cidade" style="display: flex; margin: auto; width: 70%;">
                         </div>
                         <div class="form-group" style="display: flex;">
                             <button type="submit" class="btn btn-primary" style="margin-right: 5px;">Salvar</button>
@@ -108,17 +108,22 @@
                 $('#editModal').modal('show');
             });
 
-            $('#editForm').on('submit', function(e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    url: '/atualizar/motoristas',
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
-                        $('#editModal').modal('hide');
-                        table.ajax.reload();
-                    }
+            document.querySelectorAll('form.edit').forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    var formData = new FormData(this);
+                    formData.append('formulario_id', form.getAttribute('id'));
+
+                    sendDataToServer('/processar_formulario', formData, form.getAttribute('method'))
+                        .then(({ message, type }) => {
+                            $('#editModal').modal('hide');
+                            exibirMensagemFlash(message, type);
+                            table.ajax.reload();
+                        })
+                        .catch(error => {
+                            $('#editModal').modal('hide');
+                            exibirMensagemFlash('Ocorreu um erro. Tente novamente mais tarde', 'error');
+                        });
                 });
             });
 
