@@ -35,7 +35,7 @@
                 <input type="text" class="form-control" id="motorista" name="motorista" required>
                 <div id="motoristaOptions" class="dynamic-options">
                     {% for motorista in motoristas %}
-                        <div class="dynamic-option">{{ motorista.motorista }} | {{ motorista.cidade }}</div>
+                        <div class="dynamic-option">{{ motorista.motorista }} <b>| {{ motorista.cidade }}</b></div>
                     {% endfor %}
                 </div>
             </div>
