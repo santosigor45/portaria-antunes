@@ -53,6 +53,7 @@
 {% block scripts %}
     <script>
         $(document).ready(function () {
+            $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
             let table = $('#registros_empresa').DataTable({
                 ajax: {
                     url: '/api/registros_empresa',
@@ -69,7 +70,15 @@
                     url: '/pt-BR.json'
                 },
                 columns: [
-                    {data: 'data_reg'},
+                    {
+                        data: 'data_reg',
+                        render: function (data, type, row) {
+                            if (type === 'display' || type === 'filter') {
+                                return moment.utc(data).format('LLLL');
+                            }
+                            return data;
+                        }
+                    },
                     {data: 'categoria', searchable: false},
                     {data: 'motorista'},
                     {data: 'placa'},
