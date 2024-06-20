@@ -108,7 +108,7 @@ function lastKm(placaField, km, exitField) {
     checkServerAvailability()
         .then(serverAvailable => {
             if (serverAvailable) {
-                sendDataToServer('/api/last_km?placa[value]=' + placaValue + '&exit[value]=' + exitChecked, null, 'GET')
+                sendDataToServer('/api/last_km?placa[value]=' + placaValue, null, 'GET')
                 .then(({ message, last_km }) => {
                     console.log(message);
                     if (message == 'km no needed') {
@@ -117,7 +117,9 @@ function lastKm(placaField, km, exitField) {
                     } else {
                         kmField.classList.remove('hidden');
                         kmField.querySelector('input').required = true
-                        kmField.querySelector('input').value = last_km
+                        if (exitChecked) {
+                            kmField.querySelector('input').value = last_km
+                        };
                     }
                 })
                 .catch(error => {

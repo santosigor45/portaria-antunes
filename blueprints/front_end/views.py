@@ -52,12 +52,11 @@ def api_data(data):
     if data == 'last_km':
         try:
             placa = request.args.get('placa[value]')
-            exit_checked = request.args.get('exit[value]') == 'true'
             km_needed = Placas.query.filter_by(placa=placa).one_or_none()
             if km_needed.km_necessario == 1:
                 query = RegistrosEmpresa.query.filter_by(placa=placa).order_by(
                     RegistrosEmpresa.id.desc()).first()
-                if query and exit_checked:
+                if query:
                     if query.categoria == "entrada":
                         last_km = query.quilometragem
                         return jsonify({'message': 'success', 'last_km': f'{last_km}'})
