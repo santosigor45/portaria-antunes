@@ -105,34 +105,38 @@ function lastKm(placaField, km, exitField) {
     kmField = document.getElementById(km);
     exitChecked = document.getElementById(exitField).checked;
 
-    checkServerAvailability()
-        .then(serverAvailable => {
-            if (serverAvailable) {
-                sendDataToServer('/api/last_km?placa[value]=' + placaValue, null, 'GET')
-                .then(({ message, last_km }) => {
-                    console.log(message);
-                    if (message == 'km no needed') {
-                        kmField.querySelector('input').required = false
-                        kmField.classList.add('hidden');
-                    } else {
+    if (placaValue != 'SEM-PLACA') {
+        checkServerAvailability()
+            .then(serverAvailable => {
+                if (serverAvailable) {
+                    sendDataToServer('/api/last_km?placa[value]=' + placaValue, null, 'GET')
+                    .then(({ message, last_km }) => {
+                        console.log(message);
+                        if (message == 'km no needed') {
+                            kmField.querySelector('input').required = false
+                            kmField.classList.add('hidden');
+                        } else {
+                            kmField.classList.remove('hidden');
+                            kmField.querySelector('input').required = true
+                            if (exitChecked) {
+                                kmField.querySelector('input').value = last_km
+                            };
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
                         kmField.classList.remove('hidden');
                         kmField.querySelector('input').required = true
-                        if (exitChecked) {
-                            kmField.querySelector('input').value = last_km
-                        };
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                    kmField.classList.remove('hidden');
-                    kmField.querySelector('input').required = true
-                    return
-                });
-            }
-        })
+                        return
+                    });
+                }
+            })
         .catch(error => {
             console.error('Erro ao verificar a disponibilidade do servidor:', error);
         });
+    } else {
+        return
+    };
 }
 
 // Open IndexedDB to store data if the server cannot be reached.
@@ -444,13 +448,13 @@ function verificarPlaca() {
         placaElement.removeAttribute('pattern');
         placaElement.maxLength = "9";
         kmElement.required = false;
-        descricaoDiv.style.display = "block";
+        descricaoDiv.classList.remove('hidden')
         descricaoElement.required = true;
     } else {
         placaElement.pattern = "[A-Z]{3}-\\d[A-j0-9]\\d{2}"
         placaElement.maxLength = "8"
         kmElement.required = true;
-        descricaoDiv.style.display = "none";
+        descricaoDiv.classList.add('hidden')
         descricaoElement.required = false;
     }
 }
