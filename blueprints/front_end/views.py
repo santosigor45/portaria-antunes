@@ -236,7 +236,7 @@ def processar_formulario():
 def login():
     # Check if the request method is POST for form submission
     if request.method == "POST":
-        username = request.form["username"].lower()
+        username = request.form["username"].lower().strip()
         password = request.form["password"]
 
         # Ensure username and password fields are filled
