@@ -52,16 +52,21 @@ def api_data(data):
     if data == 'last_km':
         try:
             placa = request.args.get('placa[value]')
-            query = RegistrosEmpresa.query.filter_by(placa=placa).order_by(
-                RegistrosEmpresa.id.desc()).first()
-            if query:
-                if query.categoria == "entrada":
-                    last_km = query.quilometragem
-                    return jsonify({'message': 'success', 'last_km': f'{last_km}'})
+            exit_checked = request.args.get('exit[value]') == 'true'
+            km_needed = Placas.query.filter_by(placa=placa).one_or_none()
+            if km_needed.km_necessario == 1:
+                query = RegistrosEmpresa.query.filter_by(placa=placa).order_by(
+                    RegistrosEmpresa.id.desc()).first()
+                if query and exit_checked:
+                    if query.categoria == "entrada":
+                        last_km = query.quilometragem
+                        return jsonify({'message': 'success', 'last_km': f'{last_km}'})
+                    else:
+                        abort(404, description='Nenhum dado encontrado!')
                 else:
                     abort(404, description='Nenhum dado encontrado!')
             else:
-                abort(404, description='Nenhum dado encontrado!')
+                return jsonify({'message': 'km no needed'})
         except Exception as e:
             abort(500, description=str(e))
 
@@ -184,22 +189,32 @@ def processar_formulario():
 
         elif formulario_id == "editFormPlacas":
             dados_coletados = Placas.query.get(request.form.get('id'))
+            duplicado = Placas.query.filter_by(placa=request.form.get('placa')).one_or_none()
             if not dados_coletados:
-                dados_coletados = Placas(
-                    placa=request.form.get('placa'),
-                    veiculo=request.form.get('veiculo')
-                )
+                if not duplicado:
+                    dados_coletados = Placas(
+                        placa=request.form.get('placa'),
+                        veiculo=request.form.get('veiculo'),
+                        km_necessario=bool(request.form.get('km-needed'))
+                    )
+                else:
+                    return jsonify({'type': 'info', 'message': 'Placa já cadastrada!'})
             else:
                 dados_coletados.placa = request.form.get('placa')
                 dados_coletados.veiculo = request.form.get('veiculo')
+                dados_coletados.km_necessario = bool(request.form.get('km-needed'))
 
         elif formulario_id == "editFormMotoristas":
             dados_coletados = Motoristas.query.get(request.form.get('id'))
+            duplicado = Motoristas.query.filter_by(motorista=request.form.get('motorista')).one_or_none()
             if not dados_coletados:
-                dados_coletados = Motoristas(
-                    motorista=request.form.get('motorista'),
-                    cidade=request.form.get('cidade')
-                )
+                if not duplicado:
+                    dados_coletados = Motoristas(
+                        motorista=request.form.get('motorista'),
+                        cidade=request.form.get('cidade')
+                    )
+                else:
+                    return jsonify({'type': 'info', 'message': 'Motorista já cadastrado!'})
             else:
                 dados_coletados.motorista = request.form.get('motorista')
                 dados_coletados.cidade = request.form.get('cidade')

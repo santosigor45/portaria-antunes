@@ -8,6 +8,7 @@ class Placas(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     placa = db.Column(db.String(10), nullable=False)
     veiculo = db.Column(db.String(30))
+    km_necessario = db.Column(db.Boolean, default=True)
 
     def to_dict(self):
         return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}

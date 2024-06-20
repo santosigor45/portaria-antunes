@@ -100,20 +100,30 @@ function sendDataToServer(url, formData, method) {
     };
 }
 
-function lastKm(placaField, km) {
+function lastKm(placaField, km, exitField) {
     placaValue = document.getElementById(placaField).value;
     kmField = document.getElementById(km);
+    exitChecked = document.getElementById(exitField).checked;
 
     checkServerAvailability()
         .then(serverAvailable => {
             if (serverAvailable) {
-                sendDataToServer('/api/last_km?placa[value]=' + placaValue, null, 'GET')
+                sendDataToServer('/api/last_km?placa[value]=' + placaValue + '&exit[value]=' + exitChecked, null, 'GET')
                 .then(({ message, last_km }) => {
                     console.log(message);
-                    kmField.value = last_km
+                    if (message == 'km no needed') {
+                        kmField.querySelector('input').required = false
+                        kmField.classList.add('hidden');
+                    } else {
+                        kmField.classList.remove('hidden');
+                        kmField.querySelector('input').required = true
+                        kmField.querySelector('input').value = last_km
+                    }
                 })
                 .catch(error => {
                     console.log(error);
+                    kmField.classList.remove('hidden');
+                    kmField.querySelector('input').required = true
                     return
                 });
             }
@@ -398,7 +408,7 @@ function filterAndDisplayOptions(valorAtual, allOptions, inputField, optionsCont
         optionsContainer.appendChild(clonedOption);
 
         clonedOption.addEventListener('click', function() {
-            inputField.value = clonedOption.innerText;
+            inputField.value = clonedOption.innerText.split(' |')[0];
             optionsContainer.classList.remove('show');
         });
     }

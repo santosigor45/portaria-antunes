@@ -35,7 +35,7 @@
                 <input type="text" class="form-control" id="motorista" name="motorista" required>
                 <div id="motoristaOptions" class="dynamic-options">
                     {% for motorista in motoristas %}
-                        <div class="dynamic-option">{{ motorista.motorista }}</div>
+                        <div class="dynamic-option">{{ motorista.motorista }} | {{ motorista.cidade }}</div>
                     {% endfor %}
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 <label for="descricao">Descrição</label>
                 <input class="form-control" id="descricao" name="descricao">
             </div>
-            <div class="form-group">
+            <div class="form-group" id="div-quilometragem">
                 <label for="quilometragem">Quilometragem</label>
                 <input type="number" class="form-control" id="quilometragem" name="quilometragem" required>
             </div>
@@ -101,17 +101,17 @@
 {% endblock %}
 {% block scripts %}
     <script>
+        all_placas = JSON.parse('{{ placas | tojson | safe }}');
+
         $(document).ready(function() {
             setupMotoristaInput();
             setupPlacaInput();
         });
 
         $('#placa').on('blur', function() {
-            if ($('#saida').is(':checked')) {
-                setTimeout( function() {
-                    lastKm('placa', 'quilometragem');
-                }, 300);
-            };
+            setTimeout( function() {
+                lastKm('placa', 'div-quilometragem', 'saida');
+            }, 300);
         });
     </script>
 {% endblock %}

@@ -32,6 +32,7 @@
                             <th>Editar</th>
                             <th>Placa</th>
                             <th>Veículo</th>
+                            <th>KM</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,11 +56,15 @@
                         </div>
                         <div class="form-group">
                             <label for="editPlaca">Placa</label>
-                            <input type="text" class="form-control" id="editPlaca" name="placa" autocomplete="off" style="display: flex; margin: auto; width: 70%;">
+                            <input type="text" class="form-control" id="editPlaca" name="placa" autocomplete="off" style="display: flex; margin: auto; width: 70%;" required>
                         </div>
                         <div class="form-group">
                             <label for="editVeiculo">Veiculo</label>
-                            <input type="text" class="form-control" id="editVeiculo" name="veiculo" autocomplete="off" style="display: flex; margin: auto; width: 70%;">
+                            <input type="text" class="form-control" id="editVeiculo" name="veiculo" autocomplete="off" style="display: flex; margin: auto; width: 70%;" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editKmNeeded">KM Necessário?</label>
+                            <input type="checkbox" id="editKmNeeded" name="km-needed" autocomplete="off" value="1" style="display: flex; margin: auto;">
                         </div>
                         <div class="form-group" style="display: flex;">
                             <button type="submit" class="btn btn-primary" style="margin-right: 5px;">Salvar</button>
@@ -88,7 +93,8 @@
                         orderable: false,
                     },
                     {data: 'placa'},
-                    {data: 'veiculo'}
+                    {data: 'veiculo'},
+                    {data: 'km_necessario', render: function ( data, type, row ) { return data?"<input type='checkbox' checked disabled></input>":"<input type='checkbox' disabled></input>";},}
                 ],
             });
 
@@ -97,6 +103,7 @@
                 $('#editId').val(data.id);
                 $('#editPlaca').val(data.placa);
                 $('#editVeiculo').val(data.veiculo);
+                $('#editKmNeeded').prop('checked' ,data.km_necessario);
                 $('#editModal').modal('show');
             });
 
@@ -104,6 +111,7 @@
                 $('#editId').val(null);
                 $('#editPlaca').val(null);
                 $('#editVeiculo').val(null);
+                $('#editKmNeeded').prop('checked' ,false);
                 $('#editModalLabel').text('Cadastrar Placa');
                 $('#editModal').modal('show');
             });

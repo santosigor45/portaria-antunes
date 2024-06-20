@@ -10,9 +10,9 @@
 </head>
 <body>
     <div class="container" style="background-color: #000; border: none;">
-        <img src="{{ url_for('static', filename='images/logo.png')}}" style="border-radius: 7px; max-width: 100%; height: auto; margin-bottom: 10px; filter: invert(100);" alt="Logo" />
+        <img src="{{ url_for('static', filename='images/logo.png')}}" style="max-width: 100%; height: auto;" alt="Logo" />
     </div>
-    <div class="container" style="margin-top: 10px">
+    <div class="container" style="margin-top: 0px">
         {% include 'flash.html' %}
         <div class="login-form">
             <form method="post" action="{{ url_for('front_end.login') }}">
