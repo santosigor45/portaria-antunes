@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     atualizarData();
+    setInterval(atualizarData, 60000);
     adminLoader();
     highlightActiveNavbarItem();
     exibirModal();
