@@ -13,7 +13,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style=" background-color: #000;">
         <div class="container-fluid">
             <a class="navbar-brand" href="/home" style="display: flex;">
-                <img src="{{ url_for('static', filename='images/logo_text.png')}}" style="max-width: 200px; height: auto; filter: invert(100%)  ;" alt="Logo" />
+                <img src="{{ url_for('static', filename='images/logo_text.png')}}" style="max-width: 200px; height: auto;" alt="Logo" />
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -63,8 +63,6 @@
     <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.24/sorting/datetime-moment.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js"></script>
-
-
     <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='main.js') }}"></script>
     <script>
         var isAdmin = {{ current_user.is_admin | tojson }};
