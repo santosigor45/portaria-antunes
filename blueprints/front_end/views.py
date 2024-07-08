@@ -261,7 +261,7 @@ def processar_formulario():
                     ('observacoes', 'obs')
                 ]
 
-            col_alteradas = f'{formulario_id.replace('editForm', '').lower()}: '
+            col_alteradas = f"{formulario_id.replace('editForm', '').lower()}: "
             val_antigo = ''
 
             for attr, form_field in fields:
