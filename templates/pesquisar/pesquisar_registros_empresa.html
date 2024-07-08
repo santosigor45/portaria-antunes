@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Pesquisar - Veículos da empresa
+{% endblock %}
+
+{% block content %}
+    {% include 'flash.html' %}
+    <div class="container" style="width: 100%;">
+        <div class="div-menu">
+            <div class="button-container">
+                <input type="radio" class="btn-check" id="btn-registros-empresa" name="table-select" autocomplete="off" checked/>
+                <label class="btn btn-secondary label-registros-empresa" for="btn-registros-empresa" style="margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='registros_empresa')}}';">
+                    Veículos da empresa
+                </label>
+
+                <input type="radio" class="btn-check" id="btn-registros-visitantes" name="table-select" autocomplete="off"/>
+                <label class="btn btn-secondary label-registros-visitantes" for="btn-registros-visitantes" style="display: flex; margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='registros_visitantes')}}';">
+                    <span style="margin: auto;">
+                        Registros de Visitantes
+                    </span>
+                </label>
+            </div>
+
+            <div class="input-group mb-3 div-date">
+                <span class="input-group-text">De</span>
+                <input type="date" class="form-control" id="start" autocomplete="off">
+                <span class="input-group-text">até</span>
+                <input type="date" class="form-control" id="stop" autocomplete="off">
+            </div>
+            <div class="div-table" id="div-table-empresa">
+                <div class="input-group mb-3 div-date">
+                    <button class="btn btn-outline-success" id="reload-table">Atualizar</button>
+                </div>
+                <table id="table-registros_empresa" border="1">
+                    <thead>
+                        <tr>
+                            <th>Editar</th>
+                            <th>Data/Hora</th>
+                            <th>Porteiro</th>
+                            <th>Categoria</th>
+                            <th>Motorista</th>
+                            <th>Placa</th>
+                            <th>Descrição</th>
+                            <th>KM</th>
+                            <th>Destino</th>
+                            <th>Obs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" style="top: 50%;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Editar Registros</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editFormRegistros_empresa" action="/processar_formulario" method="post" class="edit" autocomplete="off">
+                        <div class="form-group hidden">
+                            <label for="editId">ID</label>
+                            <input type="text" class="form-control" id="editId" name="id" readonly>
+                        </div>
+                        <label>Categoria</label>
+                        <div class="button-container">
+                            <input type="radio" class="btn-check" name="categoria" id="entrada" value="entrada" autocomplete="off" required/>
+                            <label class="btn btn-secondary label-entrada" for="entrada" style="margin-right: 5px;">Entrada</label>
+
+                            <input type="radio" class="btn-check" name="categoria" id="saida" value="saida" autocomplete="off"/>
+                            <label class="btn btn-secondary label-saida" for="saida">Saída</label>
+                        </div>
+                        <div class="form-group" style="display: flex;">
+                            <div class="form-group">
+                                <label for="editData">Data</label>
+                                <input type="date" class="form-control" id="editData" name="data" required>
+                            </div>
+                            <div class="form-group" style="margin-left: 5px;">
+                                <label for="editHora">Hora</label>
+                                <input type="time" class="form-control" id="editHora" name="hora" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMotorista">Motorista</label>
+                            <input type="text" class="form-control" id="editMotorista" name="motorista" autocomplete="off" required>
+                        </div>
+                        <div class="form-group" style="display: flex; margin-bottom: 0px;">
+                            <div class="form-group" style="margin-right: 5px;">
+                                <label for="editPlaca">Placa</label>
+                                <input type="text" class="form-control" id="editPlaca" name="placa" autocomplete="off" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editDescricao">Descrição</label>
+                                <input type="text" class="form-control" id="editDescricao" name="descricao" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group" style="display: flex; margin-bottom: 0px;">
+                            <div class="form-group" style="margin-right: 5px;">
+                                <label for="editKm">KM</label>
+                                <input type="number" class="form-control" id="editKm" name="km" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="editDestino">Destino</label>
+                                <select class="form-control" id="editDestino" name="destino" autocomplete="off" required>
+                                    <option value="abastecimento">Abastecimento</option>
+                                    <option value="posto">Posto de combustível</option>
+                                    <option value="manutencao">Manutenção</option>
+                                    <option value="guardar">Guardar Veículo</option>
+                                    <option value="linha">Linha</option>
+                                    <option value="casa">Casa</option>
+                                    <option value="socorro">Socorro</option>
+                                    <option value="teste">Teste</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editObs">Observações</label>
+                            <input type="text" class="form-control" id="editObs" name="obs" autocomplete="off">
+                        </div>
+                        <div class="form-group" style="display: flex;">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" style="margin-right: 5px;">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" style="top: 50%;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Excluir Registros</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteFormRegistros_empresa" action="/processar_formulario" method="post" class="delete" autocomplete="off">
+                        <div class="form-group hidden">
+                            <label for="deleteId">ID</label>
+                            <input type="text" class="form-control" id="deleteId" name="id" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Tem certeza que deseja excluir este registro?</label>
+                        </div>
+                        <div class="form-group" style="display: flex;">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" style="margin-right: 5px;">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Sim</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
+            let table = $('#table-registros_empresa').DataTable({
+                ajax: {
+                    url: '/api/registros_empresa',
+                    data: function(dtParms) {
+                        dtParms.minDate = $('#start').val();
+                        dtParms.maxDate = $('#stop').val();
+                        return dtParms
+                    },
+                },
+                order: [[1, 'desc']],
+                processing: true,
+                serverSide: true,
+                language: {
+                    url: '/pt-BR.json'
+                },
+                columns: [
+                    {
+                        data: null,
+                        defaultContent: "",
+                        orderable: false,
+                        render: function (data, type, row) {
+                            if ('{{ current_user.is_editor }}' == 'True') {
+                                return "<img src='{{ url_for('static', filename='images/lapis.png') }}' class='edit-images' id='btn-edit' alt='icone_lapis'/>" +
+                                       "<img src='{{ url_for('static', filename='images/lixeira.png') }}' class='edit-images' id='btn-delete' alt='icone_lixeira'/>";
+                            }
+                            return "<img src='{{ url_for('static', filename='images/lapis.png') }}' class='edit-images-disabled' alt='icone_lapis'/>" +
+                                   "<img src='{{ url_for('static', filename='images/lixeira.png') }}' class='edit-images-disabled' alt='icone_lixeira'/>";
+                        }
+                    },
+                    {
+                        data: 'data_reg',
+                        render: function (data, type, row) {
+                            if (type === 'display' || type === 'filter') {
+                                return moment.utc(data).format('LLLL');
+                            }
+                            return data;
+                        }
+                    },
+                    {data: 'user'},
+                    {data: 'categoria', searchable: false},
+                    {data: 'motorista'},
+                    {data: 'placa'},
+                    {data: 'descricao'},
+                    {data: 'quilometragem', orderable: false},
+                    {data: 'destino'},
+                    {data: 'observacoes', orderable: false}
+                ],
+            });
+
+            $('#table-registros_empresa tbody').on('click', '#btn-edit', function () {
+                var data = table.row($(this).parents('tr')).data();
+                var dateTime = new Date(data.data_reg);
+
+                $('#editId').val(data.id);
+                $('#' + data.categoria).prop('checked' ,true);
+                $('#editData').val(dateTime.toISOString().split( "T" )[0]);
+                $('#editHora').val(dateTime.toISOString().split( "T" )[1].slice(0, -8));
+                $('#editMotorista').val(data.motorista);
+                $('#editPlaca').val(data.placa);
+                $('#editDescricao').val(data.descricao);
+                $('#editKm').val(data.quilometragem);
+                $('#editDestino').val(data.destino);
+                $('#editObs').val(data.observacoes);
+                $('#editModal').modal('show');
+            });
+
+            $('#table-registros_empresa tbody').on('click', '#btn-delete', function () {
+                var data = table.row($(this).parents('tr')).data();
+                $('#deleteId').val(data.id);
+                $('#deleteModal').modal('show');
+            });
+
+            setupPlacaInput('editPlaca');
+            setupMotoristaInput('editMotorista');
+
+            document.getElementById('reload-table').addEventListener('click', () => table.draw());
+        });
+    </script>
+{% endblock %}
+{% endblock %}

@@ -30,12 +30,6 @@
                     <p class="div-submenu-text"> <br>Pesquisar</p>
                 </a>
             </div>
-            <div class="div-submenu" id="div-editar">
-                <a href="{{ url_for('front_end.editar')}}" class="div-menu-item">
-                    <img src="{{ url_for('static', filename='images/editar.png')}}" style="max-width: 80%; height: auto; margin-bottom: 10px;  filter: drop-shadow(10px 5px 5px gray); " alt="icone_editar" />
-                    <p class="div-submenu-text"> <br>Editar</p>
-                </a>
-            </div>
         </div>
     </div>
 {% endblock %}
@@ -49,10 +43,6 @@
                 .catch((error) => {
                     console.error('Erro ao registrar o Service Worker:', error);
                 });
-        };
-
-        if ('{{ current_user.is_manager }}' == 'False') {
-              showHiddenDiv(['div-editar'], ['add']);
         };
     </script>
 {% endblock %}

@@ -29,6 +29,10 @@ class RegistrosVisitantesView(MyModelView):
     column_searchable_list = ['id', 'user', 'data_lanc', 'data_reg', 'nome', 'documento', 'empresa', 'destino', 'observacoes']
 
 
+class PortariaHistoryView(MyModelView):
+    column_searchable_list = ['id_reg']
+
+
 class PlacasView(MyModelView):
     column_filters = ['veiculo']
     column_searchable_list = ['placa']

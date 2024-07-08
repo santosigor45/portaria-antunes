@@ -10,17 +10,18 @@
         <div class="div-menu">
             <p class="messages">Selecione os dados que deseja visualizar:</p>
             <div class="button-container">
-                <input type="radio" class="btn-check" id="empresa" name="table-select" autocomplete="off"/>
-                <label class="btn btn-secondary label-empresa" for="empresa" style="margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='empresa')}}';">
-                    Veículos da empresa
+                <input type="radio" class="btn-check" id="btn-empresa" name="table-select" autocomplete="off"/>
+                <label class="btn btn-secondary label-empresa" for="btn-empresa" style="margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='registros_empresa')}}';">
+                    Registros
                 </label>
 
-                <input type="radio" class="btn-check" id="visitantes" name="table-select" autocomplete="off"/>
-                <label class="btn btn-secondary label-visitantes" for="visitantes" style="display: flex;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='visitantes')}}';">
+                <input type="radio" class="btn-check" id="btn-motoristas" name="table-select" autocomplete="off"/>
+                <label class="btn btn-secondary label-motoristas" for="btn-motoristas" style="display: flex; margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='motoristas')}}';">
                     <span style="margin: auto;">
-                        Visitantes
+                        Cadastros
                     </span>
                 </label>
+
             </div>
         </div>
     </div>

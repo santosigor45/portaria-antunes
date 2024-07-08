@@ -87,8 +87,9 @@ p {
 #guardar:checked ~ .label-guardar,
 #servico:checked ~ .label-servico,
 #entrega:checked ~ .label-entrega,
-#btn-empresa:checked ~ .label-empresa,
+#btn-registros-empresa:checked ~ .label-registros-empresa,
 #btn-visitantes:checked ~ .label-visitantes,
+#btn-registros-visitantes:checked ~ .label-registros-visitantes,
 #btn-placas:checked ~ .label-placas,
 #btn-motoristas:checked ~ .label-motoristas
 {
@@ -212,9 +213,8 @@ p {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.modal-body {
-    font-family: "Monaco", monospace;
-    font-weight: 600;
+.modal-body input {
+    text-align: center;
 }
 
 .flash-error {
@@ -308,21 +308,27 @@ th, td {
 }
 
 
-#registros_empresa_length, #registros_empresa_info,
-#registros_visitantes_length, #registros_visitantes_info,
-#placas_length, #placas_info {
+.dataTables_length, .dataTables_info {
     text-align: left;
-
 }
 
-#registros_empresa_filter, #registros_visitantes_filter,
-#placas_filter {
+.dataTables_filter {
     text-align: right;
 }
 
 #registros_empresa_length label, #registros_visitantes_info label,
 #placas_length label {
     margin: 0;
+}
+
+.edit-images {
+    width: 25pt;
+    cursor: pointer;
+}
+
+.edit-images-disabled {
+    width: 25pt;
+    filter: grayscale(1);
 }
 
 /* Responsive styles for smaller screens */
@@ -353,7 +359,7 @@ th, td {
     }
 
     table {
-        width: 250%;
+        width: 300%;
     }
 
     .edit-tables {
@@ -367,5 +373,21 @@ th, td {
 
     .div-date {
         width: 300px;
+    }
+
+    .button-container {
+        flex-wrap: wrap;
+    }
+
+    .button-container > label {
+        flex: 40%;
+    }
+
+    .label-placas {
+        margin-right: 0 !important;
+    }
+
+    .label-visitantes {
+        margin-top: 5px;
     }
 }

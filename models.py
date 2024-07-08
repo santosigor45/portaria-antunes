@@ -31,6 +31,7 @@ class Motoristas(db.Model):
 
 
 class Visitantes(db.Model):
+    __tablename__ = 'visitantes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     nome = db.Column(db.String(50), nullable=False)
     documento = db.Column(db.String(50))
@@ -44,6 +45,7 @@ class Visitantes(db.Model):
 
 
 class RegistrosEmpresa(db.Model):
+    __tablename__ = 'registros_empresa'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     user = db.Column(db.String(10), nullable=False)
     data_lanc = db.Column(db.DateTime, nullable=False)
@@ -61,6 +63,7 @@ class RegistrosEmpresa(db.Model):
 
 
 class RegistrosVisitantes(db.Model):
+    __tablename__ = 'registros_visitantes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     user = db.Column(db.String(10), nullable=False)
     data_lanc = db.Column(db.DateTime, nullable=False)
@@ -77,6 +80,18 @@ class RegistrosVisitantes(db.Model):
         return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
 
 
+class PortariaHistory(db.Model):
+    __tablename__ = 'portaria_history'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    id_reg = db.Column(db.Integer, nullable=False)
+    user = db.Column(db.String(32), nullable=False)
+    colunas_alteradas = db.Column(db.String(100))
+    valores_antigos = db.Column(db.String(250))
+
+    def to_dict(self):
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
+
+
 class User(db.Model, UserMixin):
     __tablename__ = "portaria_users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
@@ -84,6 +99,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(512))
     is_admin = db.Column(db.Boolean, default=False)
     is_manager = db.Column(db.Boolean, default=False)
+    is_editor = db.Column(db.Boolean, default=False)
 
     def __init__(self, username, password):
         self.username = username

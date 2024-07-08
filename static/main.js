@@ -75,8 +75,29 @@ function setupFormListeners() {
                 .catch(error => {
                     salvarNoIndexDB({ url: '/processar_formulario', data: formDataToObject(formData) });
                     exibirMensagemFlash('Dados armazenados. Eles serão enviados quando a conexão for restabelecida.', 'info');
+                    console.log(error);
                     limparFormulario(form.getAttribute('id'));
                     showHiddenDiv(['observacoes-div', 'container-destino'], ['add']);
+                });
+        });
+    });
+    document.querySelectorAll('form.edit, form.delete').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            formData.append('formulario_id', form.getAttribute('id'));
+
+            sendDataToServer('/processar_formulario', formData, form.getAttribute('method'))
+                .then(({ message, type }) => {
+                    $('.modal').modal('hide');
+                    exibirMensagemFlash(message, type);
+                    console.log(message);
+                    $('#reload-table').click();
+                })
+                .catch(error => {
+                    $('.modal').modal('hide');
+                    exibirMensagemFlash('Ocorreu um erro. Tente novamente mais tarde', 'error');
+                    console.log(error);
                 });
         });
     });
@@ -252,7 +273,7 @@ function setupVisitantesInput(visitor, doc, company, visitorsList) {
     var all_fields = Array.from(visitorsList);
 
     visitante.addEventListener('input', function() {
-        visitante.value = visitante.value.toUpperCase().replace(/[0-9]/g, '');
+        setupOnlyLetters(visitor);
         var valorAtual = visitante.value;
         visitanteOptions.innerHTML = '';
 
@@ -288,7 +309,7 @@ function setupMotoristaInput(field = 'motorista') {
     var motorista = document.getElementById(field);
 
     motorista.addEventListener('input', function() {
-        motorista.value = motorista.value.toUpperCase().replace(/[0-9]/g, '');
+        setupOnlyLetters(field);
     });
 
     setupMotoristaOptions(field);
@@ -384,6 +405,11 @@ function setupPlacaPattern(field) {
             }
         }
     });
+}
+
+function setupOnlyLetters(idElement) {
+    element = document.getElementById(idElement);
+    element.value = element.value.toUpperCase().replace(/[0-9]/g, '');
 }
 
 // filters and organize dynamic options based on the user input

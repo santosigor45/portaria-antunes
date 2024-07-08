@@ -1,7 +1,7 @@
 from flask_admin import Admin
 from .admin_views import *
 from ext.database import db
-from models import RegistrosEmpresa, RegistrosVisitantes, Placas, Motoristas, Visitantes, User
+from models import RegistrosEmpresa, RegistrosVisitantes, PortariaHistory, Placas, Motoristas, Visitantes, User
 
 
 def init_app(app):
@@ -9,6 +9,7 @@ def init_app(app):
 
     admin.add_view(RegistrosEmpresaView(RegistrosEmpresa, db.session, category='Lançamentos'))
     admin.add_view(RegistrosVisitantesView(RegistrosVisitantes, db.session, category='Lançamentos'))
+    admin.add_view(PortariaHistoryView(PortariaHistory, db.session, category='Lançamentos'))
     admin.add_view(PlacasView(Placas, db.session, category='Dados'))
     admin.add_view(MotoristasView(Motoristas, db.session, category='Dados'))
     admin.add_view(VisitantesView(Visitantes, db.session, category='Dados'))
