@@ -1,4 +1,6 @@
-from flask import flash, redirect, url_for
+from flask import flash, redirect, url_for, request, render_template
+from flask_login import login_user, logout_user, current_user
+from werkzeug.security import check_password_hash
 from flask_login import LoginManager
 from models import User
 
@@ -15,7 +17,46 @@ def get_user(user_id):
 @login_manager.unauthorized_handler
 def unauthorized_callback():
     flash('Você precisa estar logado para acessar esta página', 'error')
-    return redirect(url_for('front_end.login'))
+    return redirect(url_for('views.login'))
+
+
+def login():
+    # Check if the request method is POST for form submission
+    if request.method == "POST":
+        username = request.form["username"].lower().strip()
+        password = request.form["password"]
+
+        # Ensure username and password fields are filled
+        if not username or not password:
+            flash('Preencha os dados corretamente!', 'info')
+            return redirect(url_for('views.login'))
+
+        # Check if user exists in the database
+        existing_user = User.query.filter_by(username=username).first()
+        if not existing_user:
+            flash('Usuário não encontrado!', 'info')
+            return redirect(url_for('views.login'))
+
+        # Validate the provided password
+        if not check_password_hash(existing_user.password, password):
+            flash('Senha incorreta!', 'info')
+            return redirect(url_for('views.login'))
+
+        # Log in the user and redirect to the home page
+        login_user(existing_user, remember=True)
+        return redirect(url_for("views.home"))
+
+    # Redirect authenticated users directly to home
+    if current_user.is_authenticated:
+        return redirect(url_for("views.home"))
+    else:
+        # Show the login form to unauthenticated users
+        return render_template("login.html")
+
+
+def logout():
+    logout_user()
+    return redirect(url_for('views.login'))
 
 
 def init_app(app):

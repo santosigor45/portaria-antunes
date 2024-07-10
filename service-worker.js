@@ -1,4 +1,4 @@
-const CACHE_NAME = "static_cache";
+const CACHE_NAME = "static_cache1";
 
 const STATIC_ASSETS = [
     '/',
@@ -72,7 +72,7 @@ async function fetchAssets(event) {
     const cache = await caches.open(CACHE_NAME);
     const request = event.request;
 
-    const exactRoutes = ['/admin', '/logout/', '/pesquisar', '/editar']
+    const exactRoutes = ['/admin', '/logout/', '/pesquisar']
                         .map(route => normalizeUrl(location.origin + route));
     const requestUrl = normalizeUrl(request.url);
     const isExactMatch = exactRoutes.includes(requestUrl);

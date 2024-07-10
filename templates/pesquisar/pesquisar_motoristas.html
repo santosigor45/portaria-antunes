@@ -11,21 +11,21 @@
         <div class="div-menu">
             <div class="button-container">
                 <input type="radio" class="btn-check" id="btn-motoristas" name="table-select" autocomplete="off" checked/>
-                <label class="btn btn-secondary label-motoristas" for="btn-motoristas" style="display: flex; margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='motoristas')}}';">
+                <label class="btn btn-secondary label-motoristas" for="btn-motoristas" style="display: flex; margin-right: 5px;" onclick="window.location = '{{ url_for('views.pesquisar_tables', table='motoristas')}}';">
                     <span style="margin: auto;">
                         Motoristas
                     </span>
                 </label>
 
                 <input type="radio" class="btn-check" id="btn-placas" name="table-select" autocomplete="off"/>
-                <label class="btn btn-secondary label-placas" for="btn-placas" style="display: flex; margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='placas')}}';">
+                <label class="btn btn-secondary label-placas" for="btn-placas" style="display: flex; margin-right: 5px;" onclick="window.location = '{{ url_for('views.pesquisar_tables', table='placas')}}';">
                     <span style="margin: auto;">
                         Placas
                     </span>
                 </label>
 
                 <input type="radio" class="btn-check" id="btn-visitantes" name="table-select" autocomplete="off"/>
-                <label class="btn btn-secondary label-visitantes" for="btn-visitantes" style="display: flex;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='visitantes')}}';">
+                <label class="btn btn-secondary label-visitantes" for="btn-visitantes" style="display: flex;" onclick="window.location = '{{ url_for('views.pesquisar_tables', table='visitantes')}}';">
                     <span style="margin: auto;">
                         Visitantes
                     </span>

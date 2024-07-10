@@ -11,13 +11,13 @@
             <p class="messages" id="welcome_message">{{ current_user.username|upper }}!</p>
             <p class="messages">Selecione abaixo a opção desejada:</p>
             <div class="div-submenu" style="margin-right: 5px; margin-bottom: 10px;">
-                <a href="{{ url_for('front_end.registros_empresa')}}" class="div-menu-item">
+                <a href="{{ url_for('views.registros_empresa')}}" class="div-menu-item">
                     <img src="{{ url_for('static', filename='images/veiculo.png')}}" style="max-width: 80%; height: auto;  margin-bottom: 10px;  filter: drop-shadow(5px 10px 5px gray); " alt="icone_veiculo" />
                     <p class="div-submenu-text">Veículos da <br>empresa</p>
                 </a>
             </div>
             <div class="div-submenu" style="margin-bottom: 10px;">
-                <a href="{{ url_for('front_end.registros_visitantes')}}" class="div-menu-item">
+                <a href="{{ url_for('views.registros_visitantes')}}" class="div-menu-item">
                     <img src="{{ url_for('static', filename='images/visitantes.png')}}" style="max-width: 80%; height: auto; margin-bottom: 10px; filter: drop-shadow(5px 10px 5px gray); " alt="icone_visitantes" />
                     <p class="div-submenu-text"> <br>Visitantes</p>
                 </a>
@@ -25,7 +25,7 @@
         </div>
         <div class="div-menu">
             <div class="div-submenu" style="margin-right: 5px;">
-                <a href="{{ url_for('front_end.pesquisar')}}" class="div-menu-item">
+                <a href="{{ url_for('views.pesquisar')}}" class="div-menu-item">
                     <img src="{{ url_for('static', filename='images/pesquisar.png')}}" style="max-width: 80%; height: auto;  margin-bottom: 10px;  filter: drop-shadow(5px 10px 5px gray); " alt="icone_pesquisar" />
                     <p class="div-submenu-text"> <br>Pesquisar</p>
                 </a>

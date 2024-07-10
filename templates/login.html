@@ -15,7 +15,7 @@
     <div class="container" style="margin-top: 0px">
         {% include 'flash.html' %}
         <div class="login-form">
-            <form method="post" action="{{ url_for('front_end.login') }}">
+            <form method="post" action="{{ url_for('views.login') }}">
                 <div class="form-group">
                     <label class="form-label" for="username">Nome de Usuário</label>
                     <input type="text" id="username" name="username" class="form-control" required/>

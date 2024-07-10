@@ -10,12 +10,12 @@
         <div class="div-menu">
             <div class="button-container">
                 <input type="radio" class="btn-check" id="btn-registros-empresa" name="table-select" autocomplete="off"/>
-                <label class="btn btn-secondary label-registros-empresa" for="btn-registros-empresa" style="margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='registros_empresa')}}';">
+                <label class="btn btn-secondary label-registros-empresa" for="btn-registros-empresa" style="margin-right: 5px;" onclick="window.location = '{{ url_for('views.pesquisar_tables', table='registros_empresa')}}';">
                     Veículos da empresa
                 </label>
 
                 <input type="radio" class="btn-check" id="btn-registros-visitantes" name="table-select" autocomplete="off" checked/>
-                <label class="btn btn-secondary label-registros-visitantes" for="btn-registros-visitantes" style="display: flex; margin-right: 5px;" onclick="window.location = '{{ url_for('front_end.pesquisar_tables', table='registros_visitantes')}}';">
+                <label class="btn btn-secondary label-registros-visitantes" for="btn-registros-visitantes" style="display: flex; margin-right: 5px;" onclick="window.location = '{{ url_for('views.pesquisar_tables', table='registros_visitantes')}}';">
                     <span style="margin: auto;">
                         Registros de Visitantes
                     </span>

@@ -1,9 +1,11 @@
 from flask import Blueprint
 from flask_login import login_required
-from .views import (home, registros_empresa, registros_visitantes, pesquisar, pesquisar_tables,
-                    api_data, processar_formulario, login, logout, serve_file, health_check)
+from ext.core import processar_formulario
+from ext.auth import login, logout
+from ext.api import api_data
+from .views import home, registros_empresa, registros_visitantes, pesquisar, pesquisar_tables, serve_file, health_check
 
-bp = Blueprint("front_end", __name__)
+bp = Blueprint("views", __name__)
 
 
 bp.add_url_rule("/", view_func=login_required(home), endpoint="default")

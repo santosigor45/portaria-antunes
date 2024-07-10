@@ -10,7 +10,7 @@ class MyModelView(ModelView):
 
     def inaccessible_callback(self, name, **kwargs):
         flash('Você não tem permissão para acessar esta página.', 'error')
-        return redirect(url_for('front_end.home', next=request.url))
+        return redirect(url_for('views.home', next=request.url))
 
     def scaffold_list_columns(self):
         columns = super(MyModelView, self).scaffold_list_columns()
@@ -54,4 +54,4 @@ class MyAdminIndexView(AdminIndexView):
 
     def inaccessible_callback(self, name, **kwargs):
         flash('Você não tem permissão para acessar esta página.', 'error')
-        return redirect(url_for('front_end.home', next=request.url))
+        return redirect(url_for('views.home', next=request.url))
