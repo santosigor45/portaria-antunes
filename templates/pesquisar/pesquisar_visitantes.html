@@ -59,7 +59,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editFormVisitantes" action="/processar_formulario" method="post" class="edit" autocomplete="off">
+                    <form id="editFormVisitantes" method="post" class="edit" autocomplete="off">
                         <div class="form-group hidden">
                             <label for="editId">ID</label>
                             <input type="text" class="form-control" id="editId" name="id" readonly>
@@ -95,7 +95,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="deleteFormVisitantes" action="/processar_formulario" method="post" class="delete" autocomplete="off">
+                    <form id="deleteFormVisitantes" method="post" class="delete" autocomplete="off">
                         <div class="form-group hidden">
                             <label for="deleteId">ID</label>
                             <input type="text" class="form-control" id="deleteId" name="id" readonly>
@@ -149,6 +149,7 @@
                 $('#editNome').val(data.nome);
                 $('#editDocumento').val(data.documento);
                 $('#editEmpresa').val(data.empresa);
+                $('#editModalLabel').text('Editar Visitante');
                 $('#editModal').modal('show');
             });
 

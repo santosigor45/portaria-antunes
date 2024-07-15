@@ -59,44 +59,43 @@ function scrollToView(event) {
 
 // Set up event listeners for forms to handle submissions and interact with the server.
 function setupFormListeners() {
-    document.querySelectorAll('form.dados').forEach(function (form) {
+    document.querySelectorAll('form.edit, form.delete, form.dados').forEach(function (form) {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
             var formData = new FormData(this);
-            formData.append('formulario_id', form.getAttribute('id'));
+            var formId = form.getAttribute('id')
+            var url = '/process_form/'
 
-            sendDataToServer('/processar_formulario', formData, 'POST')
+            if (formId.startsWith('edit')) {
+                url = url + 'edit/' + formId
+            } else if (formId.startsWith('delete')) {
+                url = url + 'delete/' + formId
+            } else {
+                url = url + 'send/' + formId
+            }
+
+            sendDataToServer(url, formData, form.getAttribute('method'))
                 .then(({ message, type }) => {
+                    if (url.includes('send')) {
+                        limparFormulario(formId);
+                        showHiddenDiv(['observacoes-div', 'container-destino'], ['add']);
+                    } else {
+                        $('.modal').modal('hide');
+                        $('#reload-table').click();
+                    }
                     exibirMensagemFlash(message, type);
                     console.log(message);
-                    limparFormulario(form.getAttribute('id'));
-                    showHiddenDiv(['observacoes-div', 'container-destino'], ['add']);
                 })
                 .catch(error => {
-                    salvarNoIndexDB({ url: '/processar_formulario', data: formDataToObject(formData) });
-                    exibirMensagemFlash('Dados armazenados. Eles serão enviados quando a conexão for restabelecida.', 'info');
-                    console.log(error);
-                    limparFormulario(form.getAttribute('id'));
-                    showHiddenDiv(['observacoes-div', 'container-destino'], ['add']);
-                });
-        });
-    });
-    document.querySelectorAll('form.edit, form.delete').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-            var formData = new FormData(this);
-            formData.append('formulario_id', form.getAttribute('id'));
-
-            sendDataToServer('/processar_formulario', formData, form.getAttribute('method'))
-                .then(({ message, type }) => {
-                    $('.modal').modal('hide');
-                    exibirMensagemFlash(message, type);
-                    console.log(message);
-                    $('#reload-table').click();
-                })
-                .catch(error => {
-                    $('.modal').modal('hide');
-                    exibirMensagemFlash('Ocorreu um erro. Tente novamente mais tarde', 'error');
+                    if (url.includes('send')) {
+                        salvarNoIndexDB({ url: url, data: formDataToObject(formData) });
+                        exibirMensagemFlash('Dados armazenados. Eles serão enviados quando a conexão for restabelecida.', 'info');
+                        limparFormulario(formId);
+                        showHiddenDiv(['observacoes-div', 'container-destino'], ['add']);
+                    } else {
+                        $('.modal').modal('hide');
+                        exibirMensagemFlash('Ocorreu um erro. Tente novamente mais tarde', 'error');
+                    }
                     console.log(error);
                 });
         });

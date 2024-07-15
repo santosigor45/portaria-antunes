@@ -5,58 +5,36 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 
-def processar_formulario():
+data_to_send = []
+collected_data = None
+
+
+def send_data(data_to_send, collected_data, message):
     try:
-        enviar_dados = []
-        dados_coletados = None
-        message = 'Dados enviados com sucesso!'
-        formulario_id = request.form.get('formulario_id')
+        if collected_data:
+            data_to_send.append(collected_data)
 
-        # Collect data based on form ID
-        if formulario_id == "registros_empresa":
-            dados_coletados = RegistrosEmpresa(
-                user=current_user.username,
-                data_lanc=datetime.now(ZoneInfo("America/Sao_Paulo")).replace(microsecond=0),
-                data_reg=request.form.get("data") + " " + request.form.get("hora"),
-                categoria=request.form.get("categoria"),
-                motorista=request.form.get("motorista"),
-                placa=request.form.get("placa"),
-                descricao=request.form.get("descricao") or None,
-                quilometragem=request.form.get("quilometragem") or None,
-                destino=request.form.get("destino"),
-                observacoes=request.form.get("observacoes") or None
-            )
+        if data_to_send:
+            for data in data_to_send:
+                db.session.add(data)
 
-        elif formulario_id == "registros_visitantes":
-            dados_coletados = RegistrosVisitantes(
-                user=current_user.username,
-                data_lanc=datetime.now(ZoneInfo("America/Sao_Paulo")).replace(microsecond=0),
-                data_reg=request.form.get("data") + " " + request.form.get("hora"),
-                categoria=request.form.get("categoria"),
-                nome=request.form.get("nome"),
-                documento=request.form.get("documento"),
-                empresa=request.form.get("empresa") or None,
-                placa=request.form.get("placa") or None,
-                destino=request.form.get("destino"),
-                observacoes=request.form.get("observacoes") or None
-            )
+        db.session.commit()
+        return jsonify({'type': 'success', 'message': message})
 
-            nome_visitante = Visitantes.query.filter_by(nome=dados_coletados.nome).first()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'type': 'error', 'message': 'db error:' + str(e)})
 
-            if nome_visitante is None:
-                registrar_visitante = Visitantes(
-                    nome=dados_coletados.nome,
-                    documento=dados_coletados.documento,
-                    empresa=dados_coletados.empresa
-                )
-                enviar_dados.append(registrar_visitante)
 
-        elif formulario_id == "editFormPlacas":
-            dados_coletados = Placas.query.get(request.form.get('id'))
+def edit_form(form_id):
+    try:
+        message = 'Dados alterados com sucesso!'
+        if form_id == "editFormPlacas":
+            collected_data = Placas.query.get(request.form.get('id'))
             duplicado = Placas.query.filter_by(placa=request.form.get('placa')).all()
-            if not dados_coletados:
+            if not collected_data:
                 if not duplicado:
-                    dados_coletados = Placas(
+                    collected_data = Placas(
                         placa=request.form.get('placa'),
                         veiculo=request.form.get('veiculo'),
                         km_necessario=bool(request.form.get('km-needed'))
@@ -64,37 +42,37 @@ def processar_formulario():
                 else:
                     return jsonify({'type': 'info', 'message': 'Placa já cadastrada!'})
             else:
-                if len(duplicado) == 1 and duplicado[0].id == dados_coletados.id or len(duplicado) == 0:
-                    dados_coletados.placa = request.form.get('placa')
-                    dados_coletados.veiculo = request.form.get('veiculo')
-                    dados_coletados.km_necessario = bool(request.form.get('km-needed'))
+                if len(duplicado) == 1 and duplicado[0].id == collected_data.id or len(duplicado) == 0:
+                    collected_data.placa = request.form.get('placa')
+                    collected_data.veiculo = request.form.get('veiculo')
+                    collected_data.km_necessario = bool(request.form.get('km-needed'))
                 else:
                     return jsonify({'type': 'info', 'message': 'Placa já cadastrada!'})
 
-        elif formulario_id == "editFormMotoristas":
-            dados_coletados = Motoristas.query.get(request.form.get('id'))
+        elif form_id == "editFormMotoristas":
+            collected_data = Motoristas.query.get(request.form.get('id'))
             duplicado = Motoristas.query.filter_by(motorista=request.form.get('motorista')).all()
-            if not dados_coletados:
+            if not collected_data:
                 if not duplicado:
-                    dados_coletados = Motoristas(
+                    collected_data = Motoristas(
                         motorista=request.form.get('motorista'),
                         cidade=request.form.get('cidade')
                     )
                 else:
                     return jsonify({'type': 'info', 'message': 'Motorista já cadastrado!'})
             else:
-                if len(duplicado) == 1 and duplicado[0].id == dados_coletados.id or len(duplicado) == 0:
-                    dados_coletados.motorista = request.form.get('motorista')
-                    dados_coletados.cidade = request.form.get('cidade')
+                if len(duplicado) == 1 and duplicado[0].id == collected_data.id or len(duplicado) == 0:
+                    collected_data.motorista = request.form.get('motorista')
+                    collected_data.cidade = request.form.get('cidade')
                 else:
                     return jsonify({'type': 'info', 'message': 'Motorista já cadastrado!'})
 
-        elif formulario_id == "editFormVisitantes":
-            dados_coletados = Visitantes.query.get(request.form.get('id'))
+        elif form_id == "editFormVisitantes":
+            collected_data = Visitantes.query.get(request.form.get('id'))
             duplicado = Visitantes.query.filter_by(nome=request.form.get('nome')).all()
-            if not dados_coletados:
+            if not collected_data:
                 if not duplicado:
-                    dados_coletados = Visitantes(
+                    collected_data = Visitantes(
                         nome=request.form.get('nome'),
                         documento=request.form.get('documento'),
                         empresa=request.form.get('empresa')
@@ -102,16 +80,16 @@ def processar_formulario():
                 else:
                     return jsonify({'type': 'info', 'message': 'Visitante já cadastrado!'})
             else:
-                if len(duplicado) == 1 and duplicado[0].id == dados_coletados.id or len(duplicado) == 0:
-                    dados_coletados.nome = request.form.get('nome')
-                    dados_coletados.documento = request.form.get('documento')
-                    dados_coletados.empresa = request.form.get('empresa')
+                if len(duplicado) == 1 and duplicado[0].id == collected_data.id or len(duplicado) == 0:
+                    collected_data.nome = request.form.get('nome')
+                    collected_data.documento = request.form.get('documento')
+                    collected_data.empresa = request.form.get('empresa')
                 else:
                     return jsonify({'type': 'info', 'message': 'Visitante já cadastrado!'})
 
-        elif formulario_id.startswith("editFormRegistros"):
-            if formulario_id == "editFormRegistros_empresa":
-                dados_coletados = RegistrosEmpresa.query.get(request.form.get('id'))
+        elif form_id.startswith("editFormRegistros"):
+            if form_id == "editFormRegistros_empresa":
+                collected_data = RegistrosEmpresa.query.get(request.form.get('id'))
                 fields = [
                     ('categoria', 'categoria'),
                     ('data_reg', lambda: request.form.get("data") + " " + request.form.get("hora") + ":00"),
@@ -121,8 +99,8 @@ def processar_formulario():
                     ('destino', 'destino'),
                     ('observacoes', 'obs')
                 ]
-            if formulario_id == "editFormRegistros_visitantes":
-                dados_coletados = RegistrosVisitantes.query.get(request.form.get('id'))
+            if form_id == "editFormRegistros_visitantes":
+                collected_data = RegistrosVisitantes.query.get(request.form.get('id'))
                 fields = [
                     ('categoria', 'categoria'),
                     ('data_reg', lambda: request.form.get("data") + ' ' + request.form.get("hora") + ":00"),
@@ -134,30 +112,39 @@ def processar_formulario():
                     ('observacoes', 'obs')
                 ]
 
-            col_alteradas = f"{formulario_id.replace('editForm', '').lower()}: "
+            col_alteradas = f"{form_id.replace('editForm', '').lower()}: "
             val_antigo = ''
 
             for attr, form_field in fields:
-                old_value = getattr(dados_coletados, attr) if attr != 'data_reg' else getattr(dados_coletados, attr).strftime('%Y-%m-%d %H:%M:%S')
+                old_value = getattr(collected_data, attr) if attr != 'data_reg' else getattr(collected_data, attr).strftime('%Y-%m-%d %H:%M:%S')
                 new_value = form_field() if callable(form_field) else request.form.get(form_field) or None
                 if str(old_value) != str(new_value):
                     col_alteradas += f'{attr}, '
                     val_antigo += f'{old_value}, '
-                    setattr(dados_coletados, attr, new_value)
+                    setattr(collected_data, attr, new_value)
 
             if col_alteradas:
                 history = PortariaHistory(
-                    id_reg=dados_coletados.id,
+                    id_reg=collected_data.id,
                     user=current_user.username,
                     colunas_alteradas=col_alteradas,
                     valores_antigos=val_antigo
                 )
-                enviar_dados.append(history)
+                data_to_send.append(history)
             else:
                 return jsonify({'type': 'info', 'message': 'Nenhum dado alterado!'})
 
-        elif formulario_id.startswith("deleteForm"):
-            table_id = formulario_id.replace("deleteForm", '').lower()
+        return send_data(data_to_send, collected_data, message)
+
+    except Exception as e:
+        return jsonify({'type': 'error', 'message': 'function error:' + str(e)})
+
+
+def delete_form(form_id):
+    try:
+        message = 'Dados excluídos com sucesso!'
+        if form_id.startswith("deleteForm"):
+            table_id = form_id.replace("deleteForm", '').lower()
             data_to_delete = db.session.query(table_object(table_name=table_id)).get(request.form.get('id'))
 
             col_alteradas = f'{table_id}: '
@@ -175,22 +162,58 @@ def processar_formulario():
                     colunas_alteradas=col_alteradas,
                     valores_antigos=val_antigo
                 )
-                enviar_dados.append(history)
+                data_to_send.append(history)
 
             db.session.delete(data_to_delete)
-            message = 'Dados excluídos com sucesso!'
 
-        if dados_coletados:
-            enviar_dados.append(dados_coletados)
-
-        if enviar_dados:
-            for dado in enviar_dados:
-                db.session.add(dado)
-
-        db.session.commit()
-
-        return jsonify({'type': 'success', 'message': message})
+        return send_data(data_to_send, collected_data, message)
 
     except Exception as e:
-        db.session.rollback()
-        return jsonify({'type': 'error', 'message': str(e)})
+        return jsonify({'type': 'error', 'message': 'function error:' + str(e)})
+
+
+def send_form(form_id):
+    try:
+        message = 'Dados enviados com sucesso!'
+        if form_id == "registros_empresa":
+            collected_data = RegistrosEmpresa(
+                user=current_user.username,
+                data_lanc=datetime.now(ZoneInfo("America/Sao_Paulo")).replace(microsecond=0),
+                data_reg=request.form.get("data") + " " + request.form.get("hora"),
+                categoria=request.form.get("categoria"),
+                motorista=request.form.get("motorista"),
+                placa=request.form.get("placa"),
+                descricao=request.form.get("descricao") or None,
+                quilometragem=request.form.get("quilometragem") or None,
+                destino=request.form.get("destino"),
+                observacoes=request.form.get("observacoes") or None
+            )
+
+        elif form_id == "registros_visitantes":
+            collected_data = RegistrosVisitantes(
+                user=current_user.username,
+                data_lanc=datetime.now(ZoneInfo("America/Sao_Paulo")).replace(microsecond=0),
+                data_reg=request.form.get("data") + " " + request.form.get("hora"),
+                categoria=request.form.get("categoria"),
+                nome=request.form.get("nome"),
+                documento=request.form.get("documento"),
+                empresa=request.form.get("empresa") or None,
+                placa=request.form.get("placa") or None,
+                destino=request.form.get("destino"),
+                observacoes=request.form.get("observacoes") or None
+            )
+
+            nome_visitante = Visitantes.query.filter_by(nome=collected_data.nome).first()
+
+            if nome_visitante is None:
+                registrar_visitante = Visitantes(
+                    nome=collected_data.nome,
+                    documento=collected_data.documento,
+                    empresa=collected_data.empresa
+                )
+                data_to_send.append(registrar_visitante)
+
+        return send_data(data_to_send, collected_data, message)
+
+    except Exception as e:
+        return jsonify({'type': 'error', 'message': 'function error:' + str(e)})

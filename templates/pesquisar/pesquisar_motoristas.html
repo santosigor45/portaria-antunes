@@ -58,7 +58,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editFormMotoristas" action="/processar_formulario" method="post" class="edit" autocomplete="off">
+                    <form id="editFormMotoristas" method="post" class="edit" autocomplete="off">
                         <div class="form-group hidden">
                             <label for="editId">ID</label>
                             <input type="text" class="form-control" id="editId" name="id" readonly>
@@ -140,6 +140,7 @@
                 $('#editId').val(data.id);
                 $('#editMotorista').val(data.motorista);
                 $('#editCidade').val(data.cidade);
+                $('#editModalLabel').text('Editar Motorista');
                 $('#editModal').modal('show');
             });
 
