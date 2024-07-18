@@ -5,14 +5,9 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 
-data_to_send = []
-collected_data = None
-
-
 def send_data(data_to_send, collected_data, message):
     try:
         if collected_data:
-            collected_data = db.session.merge(collected_data)
             data_to_send.append(collected_data)
 
         if data_to_send:
@@ -29,6 +24,8 @@ def send_data(data_to_send, collected_data, message):
 
 def edit_form(form_id):
     try:
+        data_to_send = []
+        collected_data = None
         message = 'Dados alterados com sucesso!'
         if form_id == "editFormPlacas":
             collected_data = db.session.merge(Placas.query.get(request.form.get('id')))
@@ -120,11 +117,13 @@ def edit_form(form_id):
                 old_value = getattr(collected_data, attr) if attr != 'data_reg' else getattr(collected_data, attr).strftime('%Y-%m-%d %H:%M:%S')
                 new_value = form_field() if callable(form_field) else request.form.get(form_field) or None
                 if str(old_value) != str(new_value):
-                    col_alteradas += f'{attr}, '
-                    val_antigo += f'{old_value}, '
+                    col_alteradas += f'({attr}), '
+                    val_antigo += f'({old_value}), '
                     setattr(collected_data, attr, new_value)
 
-            if col_alteradas:
+            if val_antigo:
+                col_alteradas = col_alteradas[:-2]
+                val_antigo = val_antigo[:-2]
                 history = PortariaHistory(
                     id_reg=collected_data.id,
                     user=current_user.username,
@@ -143,6 +142,8 @@ def edit_form(form_id):
 
 def delete_form(form_id):
     try:
+        data_to_send = []
+        collected_data = None
         message = 'Dados excluídos com sucesso!'
         if form_id.startswith("deleteForm"):
             table_id = form_id.replace("deleteForm", '').lower()
@@ -175,6 +176,8 @@ def delete_form(form_id):
 
 def send_form(form_id):
     try:
+        data_to_send = []
+        collected_data = None
         message = 'Dados enviados com sucesso!'
         if form_id == "registros_empresa":
             collected_data = RegistrosEmpresa(
