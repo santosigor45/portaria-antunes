@@ -73,11 +73,11 @@ def api_data(data):
             break
         col_name = request.args.get(f'columns[{col_index}][data]')
         if data == "registros_empresa":
-            if col_name not in ['data_reg', 'categoria', 'motorista', 'placa', 'destino']:
+            if col_name not in ['data_reg', 'user', 'categoria', 'motorista', 'placa', 'destino']:
                 col_name = 'name'
             col = getattr(RegistrosEmpresa, col_name)
         elif data == "registros_visitantes":
-            if col_name not in ['data_reg', 'categoria', 'nome', 'documento', 'empresa', 'destino']:
+            if col_name not in ['data_reg', 'user', 'categoria', 'nome', 'documento', 'empresa', 'destino']:
                 col_name = 'name'
             col = getattr(RegistrosVisitantes, col_name)
         descending = request.args.get(f'order[{i}][dir]') == 'desc'
