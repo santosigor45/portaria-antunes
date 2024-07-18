@@ -37,6 +37,7 @@ def api_data(data):
         if data == "registros_empresa":
             query = query.filter(db.or_(
                 RegistrosEmpresa.data_reg.like(f'%{search}%'),
+                RegistrosEmpresa.user.like(f'%{search}%'),
                 RegistrosEmpresa.motorista.like(f'%{search}%'),
                 RegistrosEmpresa.placa.like(f'%{search}%'),
                 RegistrosEmpresa.destino.like(f'%{search}%'),
@@ -46,6 +47,7 @@ def api_data(data):
         elif data == "registros_visitantes":
             query = query.filter(db.or_(
                 RegistrosVisitantes.nome.like(f'%{search}%'),
+                RegistrosVisitantes.user.like(f'%{search}%'),
                 RegistrosVisitantes.documento.like(f'%{search}%'),
                 RegistrosVisitantes.placa.like(f'%{search}%'),
                 RegistrosVisitantes.empresa.like(f'%{search}%'),
