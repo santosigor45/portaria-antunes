@@ -28,7 +28,7 @@ def edit_form(form_id):
         collected_data = None
         message = 'Dados alterados com sucesso!'
         if form_id == "editFormPlacas":
-            collected_data = db.session.merge(Placas.query.get(request.form.get('id')))
+            collected_data = Placas.query.get(request.form.get('id'))
             duplicado = Placas.query.filter_by(placa=request.form.get('placa')).all()
             if not collected_data:
                 if not duplicado:
@@ -48,7 +48,7 @@ def edit_form(form_id):
                     return jsonify({'type': 'info', 'message': 'Placa já cadastrada!'})
 
         elif form_id == "editFormMotoristas":
-            collected_data = db.session.merge(Motoristas.query.get(request.form.get('id')))
+            collected_data = Motoristas.query.get(request.form.get('id'))
             duplicado = Motoristas.query.filter_by(motorista=request.form.get('motorista')).all()
             if not collected_data:
                 if not duplicado:
@@ -66,7 +66,7 @@ def edit_form(form_id):
                     return jsonify({'type': 'info', 'message': 'Motorista já cadastrado!'})
 
         elif form_id == "editFormVisitantes":
-            collected_data = db.session.merge(Visitantes.query.get(request.form.get('id')))
+            collected_data = Visitantes.query.get(request.form.get('id'))
             duplicado = Visitantes.query.filter_by(nome=request.form.get('nome')).all()
             if not collected_data:
                 if not duplicado:
@@ -87,7 +87,7 @@ def edit_form(form_id):
 
         elif form_id.startswith("editFormRegistros"):
             if form_id == "editFormRegistros_empresa":
-                collected_data = db.session.merge(RegistrosEmpresa.query.get(request.form.get('id')))
+                collected_data = RegistrosEmpresa.query.get(request.form.get('id'))
                 fields = [
                     ('categoria', 'categoria'),
                     ('data_reg', lambda: request.form.get("data") + " " + request.form.get("hora") + ":00"),
@@ -98,7 +98,7 @@ def edit_form(form_id):
                     ('observacoes', 'obs')
                 ]
             if form_id == "editFormRegistros_visitantes":
-                collected_data = db.session.merge(RegistrosVisitantes.query.get(request.form.get('id')))
+                collected_data = RegistrosVisitantes.query.get(request.form.get('id'))
                 fields = [
                     ('categoria', 'categoria'),
                     ('data_reg', lambda: request.form.get("data") + ' ' + request.form.get("hora") + ":00"),
@@ -154,10 +154,12 @@ def delete_form(form_id):
 
             for column in data_to_delete.__table__.columns:
                 value = getattr(data_to_delete, column.name)
-                col_alteradas += f'{column.name}, '
-                val_antigo += f'{value}, '
+                col_alteradas += f'({column.name}), '
+                val_antigo += f'({value}), '
 
-            if col_alteradas:
+            if val_antigo:
+                col_alteradas = col_alteradas[:-2]
+                val_antigo = val_antigo[:-2]
                 history = PortariaHistory(
                     id_reg=data_to_delete.id,
                     user=current_user.username,
