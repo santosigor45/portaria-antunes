@@ -40,6 +40,7 @@ def api_data(data):
                 RegistrosEmpresa.user.like(f'%{search}%'),
                 RegistrosEmpresa.motorista.like(f'%{search}%'),
                 RegistrosEmpresa.placa.like(f'%{search}%'),
+                RegistrosEmpresa.descricao.like(f'%{search}%'),
                 RegistrosEmpresa.destino.like(f'%{search}%'),
                 RegistrosEmpresa.observacoes.like(f'%{search}%')
             ))
