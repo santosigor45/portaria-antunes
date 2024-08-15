@@ -14,19 +14,22 @@ def api_data(data):
         try:
             placa = request.args.get('placa[value]')
             km_needed = Placas.query.filter_by(placa=placa).one_or_none()
-            if km_needed.km_necessario == 1:
-                query = RegistrosEmpresa.query.filter_by(placa=placa).order_by(
-                    RegistrosEmpresa.id.desc()).first()
-                if query:
-                    if query.categoria == "entrada":
-                        last_km = query.quilometragem
-                        return jsonify({'message': 'success', 'last_km': f'{last_km}'})
+            query = RegistrosEmpresa.query.filter_by(placa=placa).order_by(
+                RegistrosEmpresa.id.desc()).first()
+            if query:
+                if query.categoria == "entrada":
+                    last_km = query.quilometragem
+                    if km_needed.km_necessario == 0:
+                        message = 'km no needed'
                     else:
-                        abort(404, description='Nenhum dado encontrado!')
+                        message = 'success'
+                    return jsonify({'message': f'{message}', 'last_km': f'{last_km}'})
                 else:
                     abort(404, description='Nenhum dado encontrado!')
             else:
-                return jsonify({'message': 'km no needed'})
+                abort(404, description='Nenhum dado encontrado!')
+
+
         except Exception as e:
             abort(500, description=str(e))
 

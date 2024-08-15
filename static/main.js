@@ -134,16 +134,12 @@ function lastKm(placaField, km, exitField) {
                         console.log(message);
                         if (message == 'km no needed') {
                             kmField.querySelector('input').required = false
-                        } else {
-                            kmField.querySelector('input').required = true
-                            if (exitChecked) {
-                                kmField.querySelector('input').value = last_km
-                            };
-                        }
+                        } if (exitChecked) {
+                            kmField.querySelector('input').value = last_km
+                        };
                     })
                     .catch(error => {
                         console.log(error);
-                        kmField.querySelector('input').required = true
                         return
                     });
                 }
@@ -462,20 +458,17 @@ function limparFormulario(form) {
 // Validates and formats the vehicle plate input.
 function verificarPlaca() {
     var placaElement = document.getElementById("placa");
-    var kmElement = document.getElementById("quilometragem");
     var descricaoDiv = document.getElementById("div-descricao");
     var descricaoElement = document.getElementById("descricao");
 
     if (placaElement.value == "SEM-PLACA") {
         placaElement.removeAttribute('pattern');
         placaElement.maxLength = "9";
-        kmElement.required = false;
         descricaoDiv.classList.remove('hidden')
         descricaoElement.required = true;
     } else {
         placaElement.pattern = "[A-Z]{3}-\\d[A-j0-9]\\d{2}"
         placaElement.maxLength = "8"
-        kmElement.required = true;
         descricaoDiv.classList.add('hidden')
         descricaoElement.required = false;
     }
@@ -649,4 +642,18 @@ function showEnterExitOptions(categoria) {
     for (var i = 0; i < filteredOptions.length; i++) {
         filteredOptions[i].classList.remove('hidden')
     }
+}
+
+function onScanSuccess(decodedText, decodedResult) {
+    const data = JSON.parse(decodedText);
+    $('#placa').val(data['placa']);
+    $('#readerModal').modal('hide');
+    console.log(`Code scanned = ${decodedText}`, decodedResult);
+    html5QrcodeScanner.stop(true);
+}
+
+function qrCodeReader() {
+    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    $('#readerModal').modal('show');
+    html5QrcodeScanner.render(onScanSuccess);
 }
