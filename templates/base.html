@@ -61,7 +61,7 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.24/sorting/datetime-moment.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js"></script>
     <script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='main.js') }}"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
         var isAdmin = {{ current_user.is_admin | tojson }};
 
