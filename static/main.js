@@ -647,9 +647,9 @@ function showEnterExitOptions(categoria) {
 function onScanSuccess(decodedText, decodedResult) {
     const data = JSON.parse(decodedText);
     $('#placa').val(data['placa']);
+
+    $('#html5-qrcode-button-camera-stop').click()
     $('#readerModal').modal('hide');
-    console.log(`Code scanned = ${decodedText}`, decodedResult);
-    html5QrcodeScanner.stop(true);
 }
 
 function qrCodeReader() {

@@ -43,7 +43,7 @@
                 <label for="placa">Placa</label>
                 <div class="form-group" style="display: flex;">
                     <input type="text" class="form-control" id="placa" onchange="setTimeout(verificarPlaca, 300);" pattern="[A-z]{3}-\d[A-j0-9]\d{2}" name="placa" maxlength="8" placeholder="'SEM-PLACA' para veículos sem placa" required>
-                    <div class="form-group hidden" style="width: 15%; margin-left: 5px; margin-bottom: 0;">
+                    <div class="form-group" style="width: 15%; margin-left: 5px; margin-bottom: 0;">
                         <img src="{{ url_for('static', filename='images/qr-code.png')}}" style="max-width: 100%; cursor: pointer;" alt="icone-qr" onclick="qrCodeReader();"/>
                     </div>
                 </div>
