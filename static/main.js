@@ -653,7 +653,7 @@ function onScanSuccess(decodedText, decodedResult) {
 }
 
 function qrCodeReader() {
-    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 }, { rememberLastUsedCamera:true });
     $('#readerModal').modal('show');
     html5QrcodeScanner.render(onScanSuccess);
 }
