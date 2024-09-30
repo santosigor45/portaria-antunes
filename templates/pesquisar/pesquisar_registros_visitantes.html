@@ -30,7 +30,6 @@
             </div>
             <div class="div-table" id="div-table-visitantes">
                 <div class="input-group mb-3 div-date">
-                    <button class="btn btn-outline-success" id="reload-table">Atualizar</button>
                     <button class="btn btn-outline-primary" id="report-button">Imprimir</button>
                 </div>
                 <table id="table-registros_visitantes" border="1">
@@ -216,6 +215,18 @@
             });
 
             $('#report-button').on('click', function() {
+                let searchTerm = table.search();
+                let startDate = $('#start').val();
+                let endDate = $('#stop').val();
+
+                if (searchTerm === '' && (!startDate || !endDate)) {
+                    let userConfirmed = confirm("Nenhum filtro selecionado. Isso irá imprimir todos os lançamentos existentes e pode demorar alguns minutos. Você tem certeza?");
+
+                    if (!userConfirmed) {
+                        return;
+                    }
+                }
+
                 let currentPageLength = table.page.len();
 
                 table.page.len(-1).draw();  // Load all data
@@ -227,6 +238,10 @@
                         table.page.len(currentPageLength).draw();  // Restore original page length
                     }, 500);  // Delay to ensure printing finishes
                 });
+            });
+
+            $('#start, #stop').on('change', function() {
+                table.draw();
             });
 
             $('#table-registros_visitantes tbody').on('click', '#btn-edit', function () {
@@ -254,8 +269,6 @@
 
             setupPlacaInput('editPlaca');
             setupMotoristaInput('editNome');
-
-            document.getElementById('reload-table').addEventListener('click', () => table.draw());
         });
     </script>
 {% endblock %}
