@@ -225,13 +225,13 @@
 
                 table.page.len(-1).draw();  // Load all data
 
-                setTimeout(function() {
+                table.one('draw', function() {
                     table.button(0).trigger();
-                }, 1000);
 
-                setTimeout(function() {
-                    table.page.len(currentPageLength).draw();
-                }, 500);
+                    setTimeout(function() {
+                        table.page.len(currentPageLength).draw();  // Restore original page length
+                    }, 500);  // Delay to ensure printing finishes
+                });
             });
 
             $('#table-registros_empresa tbody').on('click', '#btn-edit', function () {
