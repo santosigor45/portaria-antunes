@@ -156,15 +156,7 @@
         $(document).ready(function () {
             $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
             let table = $('#table-registros_visitantes').DataTable({
-                buttons: [
-                    {
-                        extend: 'print',
-                        title: 'Relatório - Visitantes',
-                        exportOptions: {
-                            columns: ':not(:first-child)'
-                        }
-                    }
-                ],
+                buttons: ['print'],
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
                 ajax: {
                     url: '/api/registros_visitantes',
@@ -214,10 +206,35 @@
                 ],
             });
 
+            function formatDateToBrazilian(dateStr) {
+                if (!dateStr) return '';
+
+                let dateObj = new Date(dateStr);
+                let day = String(dateObj.getDate()).padStart(2, '0');
+                let month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                let year = dateObj.getFullYear();
+
+                return `${day}/${month}/${year}`;
+            }
+
             $('#report-button').on('click', function() {
                 let searchTerm = table.search();
-                let startDate = $('#start').val();
-                let endDate = $('#stop').val();
+                let startDate = formatDateToBrazilian($('#start').val());
+                let endDate = formatDateToBrazilian($('#stop').val());
+
+                let reportTitle = 'Todos os Lançamentos';
+
+                if (startDate && endDate) {
+                    if (startDate == endDate) {
+                        reportTitle = `Relatório do dia ${startDate}`;
+                    } else {
+                        reportTitle = `Relatório de ${startDate} até ${endDate}`;
+                    }
+                }
+
+                if (searchTerm !== '') {
+                    reportTitle += ` (Busca: ${searchTerm})`;
+                }
 
                 if (searchTerm === '' && (!startDate || !endDate)) {
                     let userConfirmed = confirm("Nenhum filtro selecionado. Isso irá imprimir todos os lançamentos existentes e pode demorar alguns minutos. Você tem certeza?");
@@ -229,14 +246,26 @@
 
                 let currentPageLength = table.page.len();
 
-                table.page.len(-1).draw();  // Load all data
+                table.page.len(-1).draw();
 
                 table.one('draw', function() {
+                    table.buttons().destroy();
+                    new $.fn.dataTable.Buttons(table, {
+                        buttons: [
+                            {
+                                extend: 'print',
+                                title: reportTitle,
+                                exportOptions: {
+                                    columns: ':not(:first-child)'
+                                },
+                            }
+                        ]
+                    });
                     table.button(0).trigger();
 
                     setTimeout(function() {
-                        table.page.len(currentPageLength).draw();  // Restore original page length
-                    }, 500);  // Delay to ensure printing finishes
+                        table.page.len(currentPageLength).draw();
+                    }, 500);
                 });
             });
 
