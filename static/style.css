@@ -308,13 +308,14 @@ th, td {
 }
 
 
-.dataTables_length, .dataTables_info {
+.dt-length, .dt-info {
     text-align: left;
 }
 
-.dataTables_filter {
+.dt-search {
     text-align: right;
 }
+
 
 #registros_empresa_length label, #registros_visitantes_info label,
 #placas_length label {
@@ -331,8 +332,30 @@ th, td {
     filter: grayscale(1);
 }
 
+/* Responsive styles for tablet screens */
+@media (max-width: 1400px) {
+    th, td {
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    .container {
+        width: 95% !important;
+    }
+}
+
+/* Responsive styles for tablet screens */
+@media (max-width: 991px) {
+    #table-registros_empresa, #table-registros_visitantes {
+        width: 250% !important;
+    }
+}
+
 /* Responsive styles for smaller screens */
 @media (max-width: 567px) {
+    #table-registros_empresa, #table-registros_visitantes {
+        width: 300% !important;
+    }
 
     .div-menu-item {
         font-size: 3.7vw;
@@ -350,29 +373,16 @@ th, td {
         font-size: 5vw;
     }
 
-    .container {
-        width: 95% !important;
-    }
-
     .div-table {
         margin: 20px auto;
-    }
-
-    table {
-        width: 300%;
     }
 
     .edit-tables {
         width: 100% !important;
     }
 
-    th, td {
-        padding: 5px;
-        font-size: 12px;
-    }
-
     .div-date {
-        width: 300px;
+        width: 100%;
     }
 
     .button-container {
@@ -389,5 +399,13 @@ th, td {
 
     .label-visitantes {
         margin-top: 5px;
+    }
+
+    .dt-length, .dt-info, .dt-search {
+        text-align: left;
+    }
+
+    .dt-length label {
+        font-weight: 300;
     }
 }

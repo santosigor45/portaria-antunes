@@ -97,7 +97,11 @@ def api_data(data):
     # pagination
     start = request.args.get('start', type=int)
     length = request.args.get('length', type=int)
-    final_query = query.offset(start).limit(length)
+
+    if length == -1:
+        final_query = query.offset(start)
+    else:
+        final_query = query.offset(start).limit(length)
 
     # response
     return {

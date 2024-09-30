@@ -31,6 +31,7 @@
             <div class="div-table" id="div-table-visitantes">
                 <div class="input-group mb-3 div-date">
                     <button class="btn btn-outline-success" id="reload-table">Atualizar</button>
+                    <button class="btn btn-outline-primary" id="report-button">Imprimir</button>
                 </div>
                 <table id="table-registros_visitantes" border="1">
                     <thead>
@@ -156,6 +157,16 @@
         $(document).ready(function () {
             $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
             let table = $('#table-registros_visitantes').DataTable({
+                buttons: [
+                    {
+                        extend: 'print',
+                        title: 'Relatório - Visitantes',
+                        exportOptions: {
+                            columns: ':not(:first-child)'
+                        }
+                    }
+                ],
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
                 ajax: {
                     url: '/api/registros_visitantes',
                     data: function(dtParms) {
@@ -202,6 +213,18 @@
                     {data: 'destino'},
                     {data: 'observacoes', orderable: false}
                 ],
+            });
+
+            $('#report-button').on('click', function() {
+                let currentPageLength = table.page.len();
+
+                table.page.len(-1).draw();  // Load all data
+
+                table.button(0).trigger();
+
+                setTimeout(function() {
+                    table.page.len(currentPageLength).draw();
+                }, 500);
             });
 
             $('#table-registros_visitantes tbody').on('click', '#btn-edit', function () {
