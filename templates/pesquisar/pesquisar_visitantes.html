@@ -129,7 +129,7 @@
                         defaultContent: "",
                         orderable: false,
                         render: function (data, type, row) {
-                            if ('{{ current_user.is_manager }}' == 'True') {
+                            if ('{{ current_user.is_editor }}' == 'True') {
                                 return "<img src='{{ url_for('static', filename='images/lapis.png') }}' class='edit-images' id='btn-edit' alt='icone_lapis'/>" +
                                        "<img src='{{ url_for('static', filename='images/lixeira.png') }}' class='edit-images' id='btn-delete' alt='icone_lixeira'/>";
                             }
@@ -180,7 +180,7 @@
                 setupOnlyLetters('editEmpresa');
             });
 
-            if ('{{ current_user.is_manager }}' == 'False') {
+            if ('{{ current_user.is_editor }}' == 'False') {
                 $('#cadastrarField').addClass('hidden');
             };
         });
