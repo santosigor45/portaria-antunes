@@ -29,6 +29,22 @@ def api_data(data):
             else:
                 abort(404, description='Nenhum dado encontrado!')
 
+        except Exception as e:
+            abort(500, description=str(e))
+
+    if data == 'last_visitor':
+        try:
+            placa = request.args.get('placa[value]')
+            query = RegistrosVisitantes.query.filter_by(placa=placa).order_by(
+                RegistrosVisitantes.id.desc()).first()
+            if query:
+                if query.categoria == "entrada":
+                    last_visitor = query.nome
+                    return jsonify({'message': 'success', 'last_visitor': f'{last_visitor}'})
+                else:
+                    abort(404, description='Nenhum dado encontrado!')
+            else:
+                abort(404, description='Nenhum dado encontrado!')
 
         except Exception as e:
             abort(500, description=str(e))

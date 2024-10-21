@@ -126,27 +126,69 @@ function lastKm(placaField, km, exitField) {
     exitChecked = document.getElementById(exitField).checked;
 
     if (placaValue != 'SEM-PLACA') {
-        checkServerAvailability()
-            .then(serverAvailable => {
-                if (serverAvailable) {
-                    sendDataToServer('/api/last_km?placa[value]=' + placaValue, null, 'GET')
-                    .then(({ message, last_km }) => {
-                        console.log(message);
-                        if (message == 'km no needed') {
-                            kmField.querySelector('input').required = false
-                        } if (exitChecked) {
+        if (exitChecked) {
+            checkServerAvailability()
+                .then(serverAvailable => {
+                    if (serverAvailable) {
+                        sendDataToServer('/api/last_km?placa[value]=' + placaValue, null, 'GET')
+                        .then(({ message, last_km }) => {
+                            console.log(message);
+                            if (message == 'km no needed') {
+                                kmField.querySelector('input').required = false
+                                return
+                            };
                             kmField.querySelector('input').value = last_km
-                        };
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        return
-                    });
-                }
-            })
-        .catch(error => {
-            console.error('Erro ao verificar a disponibilidade do servidor:', error);
-        });
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            return
+                        });
+                    }
+                })
+            .catch(error => {
+                console.error('Erro ao verificar a disponibilidade do servidor:', error);
+            });
+        } else {
+            return
+        };
+    } else {
+        return
+    };
+}
+
+function lastVisitor(placaField, visitor, exitField) {
+    placaValue = document.getElementById(placaField).value;
+    visitorField = document.getElementById(visitor);
+    exitChecked = document.getElementById(exitField).checked;
+
+    if (placaValue != 'SEM-PLACA') {
+        if (exitChecked) {
+            checkServerAvailability()
+                .then(serverAvailable => {
+                    if (serverAvailable) {
+                        sendDataToServer('/api/last_visitor?placa[value]=' + placaValue, null, 'GET')
+                        .then(({ message, last_visitor }) => {
+                            console.log(message);
+                            visitorField.value = last_visitor;
+                            visitorField.readOnly = true;
+                            visitorField.focus();
+                            setTimeout( function() {
+                                visitorField.blur();
+                            }, 300);
+                            visitorField.readOnly = false;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            return
+                        });
+                    }
+                })
+            .catch(error => {
+                console.error('Erro ao verificar a disponibilidade do servidor:', error);
+            });
+        } else {
+            return
+        };
     } else {
         return
     };

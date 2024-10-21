@@ -83,5 +83,11 @@
             setupPlacaInput('placa');
             setupOnlyLetters('empresa');
         });
+
+        $('#placa').on('blur', function() {
+            setTimeout( function() {
+                lastVisitor('placa', 'nome', 'saida');
+            }, 300);
+        });
     </script>
 {% endblock %}
