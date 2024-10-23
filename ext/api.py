@@ -53,26 +53,27 @@ def api_data(data):
     search = request.args.get('search[value]')
 
     if search:
+        search_str = str(search).strip()
         if data == "registros_empresa":
             query = query.filter(db.or_(
-                RegistrosEmpresa.data_reg.like(f'%{search}%'),
-                RegistrosEmpresa.user.like(f'%{search}%'),
-                RegistrosEmpresa.motorista.like(f'%{search}%'),
-                RegistrosEmpresa.placa.like(f'%{search}%'),
-                RegistrosEmpresa.descricao.like(f'%{search}%'),
-                RegistrosEmpresa.destino.like(f'%{search}%'),
-                RegistrosEmpresa.observacoes.like(f'%{search}%')
+                RegistrosEmpresa.data_reg.icontains(search_str),
+                RegistrosEmpresa.user.icontains(search_str),
+                RegistrosEmpresa.motorista.icontains(search_str),
+                RegistrosEmpresa.placa.icontains(search_str),
+                RegistrosEmpresa.descricao.icontains(search_str),
+                RegistrosEmpresa.destino.icontains(search_str),
+                RegistrosEmpresa.observacoes.icontains(search_str)
             ))
 
         elif data == "registros_visitantes":
             query = query.filter(db.or_(
-                RegistrosVisitantes.nome.like(f'%{search}%'),
-                RegistrosVisitantes.user.like(f'%{search}%'),
-                RegistrosVisitantes.documento.like(f'%{search}%'),
-                RegistrosVisitantes.placa.like(f'%{search}%'),
-                RegistrosVisitantes.empresa.like(f'%{search}%'),
-                RegistrosVisitantes.destino.like(f'%{search}%'),
-                RegistrosVisitantes.observacoes.like(f'%{search}%')
+                RegistrosVisitantes.nome.icontains(search_str),
+                RegistrosVisitantes.user.icontains(search_str),
+                RegistrosVisitantes.documento.icontains(search_str),
+                RegistrosVisitantes.placa.icontains(search_str),
+                RegistrosVisitantes.empresa.icontains(search_str),
+                RegistrosVisitantes.destino.icontains(search_str),
+                RegistrosVisitantes.observacoes.icontains(search_str)
             ))
 
     # date range filter
