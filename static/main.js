@@ -135,7 +135,6 @@ function lastKm(placaField, km, exitField) {
                             console.log(message);
                             if (message == 'km no needed') {
                                 kmField.querySelector('input').required = false
-                                return
                             };
                             kmField.querySelector('input').value = last_km
                         })
