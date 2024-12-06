@@ -181,6 +181,7 @@ def send_form(form_id):
         data_to_send = []
         collected_data = None
         message = 'Dados enviados com sucesso!'
+
         if form_id == "registros_empresa":
             collected_data = RegistrosEmpresa(
                 user=current_user.username,

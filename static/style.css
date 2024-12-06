@@ -64,9 +64,15 @@ p {
 .button-container {
     margin: 0;
     padding: 0;
-    margin-bottom: 15px;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
     text-align: center;
+}
+
+.options-container {
+    padding-top: 10px;
 }
 
 .btn-secondary {

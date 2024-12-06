@@ -1,4 +1,5 @@
 from flask import request, jsonify, abort
+from sqlalchemy import func, or_
 from models import *
 
 
@@ -53,28 +54,33 @@ def api_data(data):
     search = request.args.get('search[value]')
 
     if search:
-        search_str = str(search).strip()
+        search_str = str(search).strip().replace('-', '')
+
         if data == "registros_empresa":
-            query = query.filter(db.or_(
-                RegistrosEmpresa.data_reg.icontains(search_str),
-                RegistrosEmpresa.user.icontains(search_str),
-                RegistrosEmpresa.motorista.icontains(search_str),
-                RegistrosEmpresa.placa.icontains(search_str),
-                RegistrosEmpresa.descricao.icontains(search_str),
-                RegistrosEmpresa.destino.icontains(search_str),
-                RegistrosEmpresa.observacoes.icontains(search_str)
-            ))
+            query = query.filter(
+                or_(
+                    RegistrosEmpresa.data_reg.ilike(f"%{search_str}%"),
+                    RegistrosEmpresa.user.ilike(f"%{search_str}%"),
+                    RegistrosEmpresa.motorista.ilike(f"%{search_str}%"),
+                    func.replace(RegistrosEmpresa.placa, '-', '').ilike(f"%{search_str}%"),
+                    RegistrosEmpresa.descricao.ilike(f"%{search_str}%"),
+                    RegistrosEmpresa.destino.ilike(f"%{search_str}%"),
+                    RegistrosEmpresa.observacoes.ilike(f"%{search_str}%")
+                )
+            )
 
         elif data == "registros_visitantes":
-            query = query.filter(db.or_(
-                RegistrosVisitantes.nome.icontains(search_str),
-                RegistrosVisitantes.user.icontains(search_str),
-                RegistrosVisitantes.documento.icontains(search_str),
-                RegistrosVisitantes.placa.icontains(search_str),
-                RegistrosVisitantes.empresa.icontains(search_str),
-                RegistrosVisitantes.destino.icontains(search_str),
-                RegistrosVisitantes.observacoes.icontains(search_str)
-            ))
+            query = query.filter(
+                or_(
+                    RegistrosVisitantes.nome.ilike(f"%{search_str}%"),
+                    RegistrosVisitantes.user.ilike(f"%{search_str}%"),
+                    RegistrosVisitantes.documento.ilike(f"%{search_str}%"),
+                    func.replace(RegistrosVisitantes.placa, '-', '').ilike(f"%{search_str}%"),
+                    RegistrosVisitantes.empresa.ilike(f"%{search_str}%"),
+                    RegistrosVisitantes.destino.ilike(f"%{search_str}%"),
+                    RegistrosVisitantes.observacoes.ilike(f"%{search_str}%")
+                )
+            )
 
     # date range filter
     min_date = request.args.get('minDate')

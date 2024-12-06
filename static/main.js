@@ -74,6 +74,7 @@ function setupFormListeners() {
                 url = url + 'send/' + formId
             }
 
+
             sendDataToServer(url, formData, form.getAttribute('method'))
                 .then(({ message, type }) => {
                     if (url.includes('send')) {

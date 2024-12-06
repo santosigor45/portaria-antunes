@@ -240,7 +240,7 @@
                     reportTitle += ` (Busca: ${searchTerm})`;
                 }
 
-                if (searchTerm === '' && (!startDate || !endDate)) {
+                if (!searchTerm && (!startDate || !endDate)) {
                     let userConfirmed = confirm("Nenhum filtro selecionado. Isso irá imprimir todos os lançamentos existentes e pode demorar alguns minutos. Você tem certeza?");
 
                     if (!userConfirmed) {
