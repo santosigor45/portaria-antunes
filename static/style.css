@@ -301,14 +301,6 @@ th, td {
     overflow-y: auto;
 }
 
-.div-table {
-    text-align: center;
-    display: inline-block;
-    margin-top: 0px !important;
-    margin: 30px 5px;
-    max-width: 100%;
-}
-
 .div-date {
     width: 400px;
 }

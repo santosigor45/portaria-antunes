@@ -18,7 +18,7 @@
                 <label class="btn btn-secondary label-entrada" for="entrada" style="margin-right: 5px;" onclick="showEnterExitOptions('.entrada');removeAddRequired(['servico'], ['add'])">Entrada</label>
 
                 <input type="radio" class="btn-check" name="categoria" id="saida" value="saida" autocomplete="off"/>
-                <label class="btn btn-secondary label-saida" for="saida" onclick="removeAddRequired(['servico'], ['remove']);showHiddenDiv(['observacoes-div', 'container-destino'], ['add']);">Saída</label>
+                <label class="btn btn-secondary label-saida" for="saida" onclick="removeAddRequired(['servico'], ['remove']);showHiddenElement(['observacoes-div', 'container-destino'], ['add']);">Saída</label>
             </div>
             <div class="form-group" style="display: flex;">
                 <div class="form-group">
@@ -54,7 +54,7 @@
             <div class="form-group hidden" id="container-destino">
                 <label>Destino</label>
                 <br>
-                <div class="button-container buttons-destino" onclick="showHiddenDiv(['observacoes-div'], ['remove']);">
+                <div class="button-container buttons-destino" onclick="showHiddenElement(['observacoes-div'], ['remove']);">
                     <input type="radio" class="btn-check" id="servico" name="destino" value="servico" autocomplete="off" required/>
                     <label class="btn btn-secondary label-servico label-destino entrada" for="servico">Serviço</label>
 
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="button-container" style="margin: 0; flex-wrap: nowrap;">
-                <button type="button" class="btn btn-danger btn-lg" id="limpar" onclick="confirmarLimpeza('registros_empresa');showHiddenDiv(['container-destino', 'observacoes-div'], ['add']);">Limpar</button>
+                <button type="button" class="btn btn-danger btn-lg" id="limpar" onclick="confirmFormReset('registros_empresa');showHiddenElement(['container-destino', 'observacoes-div'], ['add']);">Limpar</button>
                 <button type="submit" class="btn btn-success btn-lg" id="enviar-btn" style="margin-left: 5px;">Enviar</button>
             </div>
         </form>
@@ -86,7 +86,7 @@
 
         $('#placa').on('blur', function() {
             setTimeout( function() {
-                lastVisitor('placa', 'nome', 'saida');
+                loadVisitorData('placa', 'nome', 'saida');
             }, 300);
         });
     </script>

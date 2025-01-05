@@ -21,9 +21,6 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" aria-current="page" href="{{ url_for('views.home')}}">&bull; Página Inicial</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
                         <a class="nav-link" aria-current="page" href="{{ url_for('views.registros_empresa')}}">&bull; Veículos da empresa</a>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -80,7 +77,7 @@
 
 
         if ('{{ current_user.is_manager }}' == 'False') {
-              showHiddenDiv(['list-editar'], ['add']);
+              showHiddenElement(['list-editar'], ['add']);
         };
     </script>
     {% block scripts %}{% endblock %}

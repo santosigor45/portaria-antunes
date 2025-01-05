@@ -11,7 +11,7 @@ def api_data(data):
 
     query = db.session.query(table_object(table_name=data))
 
-    if data == 'last_km':
+    if data == 'retrieve_mileage':
         try:
             placa = request.args.get('placa[value]')
             km_needed = Placas.query.filter_by(placa=placa).one_or_none()
@@ -19,12 +19,12 @@ def api_data(data):
                 RegistrosEmpresa.id.desc()).first()
             if query:
                 if query.categoria == "entrada":
-                    last_km = query.quilometragem
+                    retrieved_mileage = query.quilometragem
                     if km_needed.km_necessario == 0:
                         message = 'km no needed'
                     else:
                         message = 'success'
-                    return jsonify({'message': f'{message}', 'last_km': f'{last_km}'})
+                    return jsonify({'message': f'{message}', 'retrieved_mileage': f'{retrieved_mileage}'})
                 else:
                     abort(404, description='Nenhum dado encontrado!')
             else:
@@ -33,15 +33,15 @@ def api_data(data):
         except Exception as e:
             abort(500, description=str(e))
 
-    if data == 'last_visitor':
+    if data == 'load_visitor_data':
         try:
             placa = request.args.get('placa[value]')
             query = RegistrosVisitantes.query.filter_by(placa=placa).order_by(
                 RegistrosVisitantes.id.desc()).first()
             if query:
                 if query.categoria == "entrada":
-                    last_visitor = query.nome
-                    return jsonify({'message': 'success', 'last_visitor': f'{last_visitor}'})
+                    visitor_name = query.nome
+                    return jsonify({'message': 'success', 'visitor_name': f'{visitor_name}'})
                 else:
                     abort(404, description='Nenhum dado encontrado!')
             else:
