@@ -1,4 +1,4 @@
-// dispara quando o DOM estiver completamente carregado.
+// dispara quando o DOM estiver completamente carregado
 document.addEventListener('DOMContentLoaded', function () {
     updateDate();
     adminLoader();
@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /*************************************************************/
-/*                   ENVIO DE FORMULÁRIO                     */
+/*                   ENVIO DE FORMULARIO                     */
 /*************************************************************/
 
-// inicializa listeners em todos os formulários (edit, delete, dados).
+// inicializa listeners em todos os formulários (edit, delete, dados)
 function setupFormListeners() {
     document.querySelectorAll('form.edit, form.delete, form.dados').forEach(function (form) {
         form.addEventListener('submit', async function (event) {
@@ -34,6 +34,7 @@ function setupFormListeners() {
         });
     });
 }
+
 
 // envia dados do formulário ao servidor e lida com a resposta
 function submitFormData(url, formData, form, formId) {
@@ -59,6 +60,7 @@ function submitFormData(url, formData, form, formId) {
         });
 }
 
+
 // requisicao generica ao servidor, usando fetch
 function sendDataToServer(url, formData, method = 'POST') {
     if (method === 'GET') {
@@ -68,10 +70,10 @@ function sendDataToServer(url, formData, method = 'POST') {
 }
 
 /*************************************************************/
-/*               CONFIGURAÇÕES DE FORMULÁRIO                 */
+/*               CONFIGURACOES DE FORMULARIO                 */
 /*************************************************************/
 
-// atualiza o campo de data para a data atual no formato ISO (yyyy-mm-dd).
+// atualiza o campo de data para a data atual no formato ISO (yyyy-mm-dd)
 function updateDate() {
     var today = new Date();
     var offset = today.getTimezoneOffset() * 60000;
@@ -86,7 +88,8 @@ function updateDate() {
     }
 }
 
-// configura campo de input para motorista, exibindo opções filtradas.
+
+// configura campo de input para motorista, exibindo opções filtradas
 function setupMotoristaInput(field = 'motorista') {
     var motorista = document.getElementById(field);
 
@@ -111,7 +114,7 @@ function setupMotoristaOptions(field) {
         var valorAtual = motorista.value;
         motoristaOptions.innerHTML = '';
 
-        filterAndDisplayOptions(valorAtual, all_motoristas, motorista, motoristaOptions);
+        displayOptions(valorAtual, all_motoristas, motorista, motoristaOptions);
     });
 
     motorista.addEventListener('blur', function() {
@@ -121,7 +124,8 @@ function setupMotoristaOptions(field) {
     });
 }
 
-// configura campo de input para placa, exibindo opções filtradas e formatando a digitação.
+
+// configura campo de input para placa, exibindo opções filtradas e formatando a digitacao
 function setupPlacaInput(field = 'placa') {
     var placa = document.getElementById(field);
 
@@ -147,7 +151,7 @@ function setupPlacaOptions(field) {
         var valorAtual = placa.value;
         placaOptions.innerHTML = '';
 
-        filterAndDisplayOptions(valorAtual, all_placas, placa, placaOptions);
+        displayOptions(valorAtual, all_placas, placa, placaOptions);
     });
 
     placa.addEventListener('blur', function() {
@@ -188,7 +192,8 @@ function setupPlacaPattern(field) {
     });
 }
 
-// configura campo de input para visitantes, exibindo opções filtradas.
+
+// configura campo de input para visitantes, exibindo opcoes filtradas
 function setupVisitantesInput(visitor, doc, company, visitorsList) {
     var visitante = document.getElementById(visitor);
     var visitanteOptions = document.getElementById('visitanteOptions');
@@ -207,7 +212,7 @@ function setupVisitantesInput(visitor, doc, company, visitorsList) {
         var valorAtual = visitante.value;
         visitanteOptions.innerHTML = '';
 
-        filterAndDisplayOptions(valorAtual, all_visitantes, visitante, visitanteOptions);
+        displayOptions(valorAtual, all_visitantes, visitante, visitanteOptions);
     });
 
     visitante.addEventListener('blur', function() {
@@ -235,8 +240,9 @@ function setupVisitantesInput(visitor, doc, company, visitorsList) {
     });
 }
 
-// filtra as opcoes e exibe na tela, baseado no valor atual do input.
-function filterAndDisplayOptions(valorAtual, allOptions, inputField, optionsContainer) {
+
+// filtra as opcoes e exibe na tela, baseado no valor atual do input
+function displayOptions(valorAtual, allOptions, inputField, optionsContainer) {
     optionsContainer.innerHTML = '';
 
     if (valorAtual.length === 0) {
@@ -271,6 +277,7 @@ function filterAndDisplayOptions(valorAtual, allOptions, inputField, optionsCont
     optionsContainer.classList.add('show');
 }
 
+
 // mostra apenas as opcoes de destino que correspondem a categoria selecionada
 function showEnterExitOptions(categoria) {
     var allOptions = document.getElementsByName('destino');
@@ -290,6 +297,7 @@ function showEnterExitOptions(categoria) {
         filteredOptions[i].classList.remove('hidden')
     }
 }
+
 
 // desabilita o botao de envio por um curto período para evitar envios duplicados
 function setupSendButtonBehavior() {
@@ -312,7 +320,7 @@ function setupSendButtonBehavior() {
 }
 
 /*************************************************************/
-/*                VERIFICAÇÕES DE FORMULÁRIO                 */
+/*                VERIFICACOES DE FORMULARIO                 */
 /*************************************************************/
 
 // formata o texto digitado em um campo de placa (AAA-0A00).
@@ -373,6 +381,7 @@ function retrieveMileage(placaField, km, exitField) {
         return
     };
 }
+
 
 // retorna a placa e o documento ao colocar o nome do visitante
 function loadVisitorData(placaField, visitor, exitField) {
@@ -450,7 +459,7 @@ function loadVisitorData(placaField, visitor, exitField) {
 }
 
 /*************************************************************/
-/*                        ESTÉTICA                           */
+/*                        ESTETICA                           */
 /*************************************************************/
 
 // faz a rolagem suave ate o elemento focado com um atraso
@@ -460,6 +469,7 @@ function scrollToView(event) {
         activeElement.scrollIntoView({behavior: 'smooth', block: 'center'});
     }, 300);
 }
+
 
 // destaca o item do navbar correspondente a URL atual
 function highlightActiveNavbarItem() {
@@ -471,6 +481,7 @@ function highlightActiveNavbarItem() {
         }
     })
 }
+
 
 // exibe saudacao personalizada (bom dia, boa tarde, boa noite)
 function showCustomMessage() {
@@ -504,6 +515,7 @@ function showModal() {
     }
 }
 
+
 // fecha o modal
 function closeModal(modal_id) {
     var modal = document.getElementById(modal_id);
@@ -512,6 +524,7 @@ function closeModal(modal_id) {
         modal.classList.remove('show', 'fade-out');
     }, 200);
 }
+
 
 // gerencia mensagens flash em uma modal
 function showFlashMessage(mensagem, tipo) {
@@ -535,7 +548,7 @@ function showFlashMessage(mensagem, tipo) {
 }
 
 /*************************************************************/
-/*                       PERMISSÕES                          */
+/*                       PERMISSOES                          */
 /*************************************************************/
 
 // ajusta UI de links específicos se o usuário for administrador
@@ -560,6 +573,7 @@ function qrCodeReader() {
     html5QrcodeScanner.render(onScanSuccess);
 }
 
+
 // preenche os dados retornados pelo leitor de QR Code
 function onScanSuccess(decodedText, decodedResult) {
     const data = JSON.parse(decodedText);
@@ -580,6 +594,7 @@ function checkServerAvailability() {
         .catch(() => false);
 }
 
+
 // converte um objeto FormData para um objeto JS simples (key-value)
 function formDataToObject(formData) {
     var formDataObject = {};
@@ -589,6 +604,7 @@ function formDataToObject(formData) {
     return formDataObject;
 }
 
+
 // exibe caixa de dialogo de confirmacao para limpeza de formulario
 function confirmFormReset(form) {
     var confirmar = confirm("Tem certeza que deseja limpar tudo?");
@@ -597,6 +613,7 @@ function confirmFormReset(form) {
     }
 }
 
+
 // reseta o formulario e atualiza a data para o dia atual
 function formReset(form) {
     var formulario = document.getElementById(form);
@@ -604,11 +621,13 @@ function formReset(form) {
     updateDate();
 }
 
+
 // funcao generica que formata o input apenas com letras
 function setupOnlyLetters(idElement) {
     element = document.getElementById(idElement);
     element.value = element.value.toUpperCase().replace(/[0-9]/g, '');
 }
+
 
 // funcao generica que controla o estilo hidden de qualquer elemento
 function showHiddenElement(element, option) {
@@ -631,6 +650,7 @@ function showHiddenElement(element, option) {
         }
     }
 }
+
 
 // funcao generica que controla o atributo required de qualquer elemento
 function removeAddRequired(element, option) {
