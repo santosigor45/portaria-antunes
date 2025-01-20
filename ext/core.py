@@ -182,6 +182,15 @@ def send_form(form_id):
         collected_data = None
         message = 'Dados enviados com sucesso!'
 
+        # unique token verification
+        request_token = request.form.get('request_token')
+        token_existente = PortariaToken.query.filter_by(token=request_token).first()
+        if token_existente:
+            return '', 204
+
+        novo_token = PortariaToken(token=request_token)
+        data_to_send.append(novo_token)
+
         if form_id == "registros_empresa":
             collected_data = RegistrosEmpresa(
                 user=current_user.username,

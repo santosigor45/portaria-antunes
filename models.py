@@ -1,10 +1,13 @@
+from datetime import datetime
+
 from ext.database import db
 from sqlalchemy.inspection import inspect
 from flask_login import UserMixin
 
 
+# tabelas compartilhadas
 class Placas(db.Model):
-    __tablename__ = 'placas'
+    __tablename__ = "placas"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     placa = db.Column(db.String(10), nullable=False)
     veiculo = db.Column(db.String(30))
@@ -14,11 +17,11 @@ class Placas(db.Model):
         return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
 
     def __repr__(self):
-        return f'<Placa id={self.id} placa={self.placa}>'
+        return f"<Placa id={self.id} placa={self.placa}>"
 
 
 class Motoristas(db.Model):
-    __tablename__ = 'motoristas'
+    __tablename__ = "motoristas"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     motorista = db.Column(db.String(50), nullable=False)
     cidade = db.Column(db.String(30))
@@ -27,9 +30,10 @@ class Motoristas(db.Model):
         return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
 
     def __repr__(self):
-        return f'<Motorista id={self.id} motorista={self.motorista}>'
+        return f"<Motorista id={self.id} motorista={self.motorista}>"
 
 
+# tabelas exclusivas
 class Visitantes(db.Model):
     __tablename__ = 'visitantes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
@@ -73,7 +77,7 @@ class RegistrosVisitantes(db.Model):
     documento = db.Column(db.String(50), nullable=False)
     placa = db.Column(db.String(10))
     empresa = db.Column(db.String(50))
-    destino = db.Column(db.String(50), nullable=False)
+    destino = db.Column(db.String(50))
     observacoes = db.Column(db.String(100))
 
     def to_dict(self):
@@ -85,8 +89,8 @@ class PortariaHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     id_reg = db.Column(db.Integer, nullable=False)
     user = db.Column(db.String(32), nullable=False)
-    colunas_alteradas = db.Column(db.String(100))
-    valores_antigos = db.Column(db.String(250))
+    colunas_alteradas = db.Column(db.String(512))
+    valores_antigos = db.Column(db.String(512))
 
     def to_dict(self):
         return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
@@ -95,8 +99,8 @@ class PortariaHistory(db.Model):
 class User(db.Model, UserMixin):
     __tablename__ = "portaria_users"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-    username = db.Column(db.String(140))
-    password = db.Column(db.String(512))
+    username = db.Column(db.String(140), nullable=False)
+    password = db.Column(db.String(512), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     is_manager = db.Column(db.Boolean, default=False)
     is_editor = db.Column(db.Boolean, default=False)
@@ -104,6 +108,13 @@ class User(db.Model, UserMixin):
     def __init__(self, username, password):
         self.username = username
         self.password = password
+
+
+class PortariaToken(db.Model):
+    __tablename__ = "portaria_tokens"
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(36), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
 
 tables_dict = {table.__tablename__: table for table in db.Model.__subclasses__()}

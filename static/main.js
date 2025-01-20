@@ -25,6 +25,11 @@ function setupFormListeners() {
             event.preventDefault();
             const formData = new FormData(this);
             const formId = form.getAttribute('id')
+
+            // token unico
+            const uniqueToken = crypto.randomUUID();
+            formData.append('request_token', uniqueToken);
+
             const url = '/process_form/' +
                         (formId.startsWith('edit') ? 'edit/' :
                         formId.startsWith('delete') ? 'delete/' : 'send/') +
