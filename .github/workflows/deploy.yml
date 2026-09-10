@@ -1,0 +1,43 @@
+name: Publicar na Nautilus
+
+on:
+  workflow_run:
+    workflows: [Validações básicas]
+    branches: [main]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: portaria-nautilus-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      vars.NAUTILUS_DEPLOY_ENABLED == 'true' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    environment: production
+    steps:
+      - name: Checkout do commit validado
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Construir imagens AMD64 e publicar pelo Dokploy
+        env:
+          RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+          VALIDATION_RUN_ID: ${{ github.event.workflow_run.id }}
+          GH_TOKEN: ${{ github.token }}
+          NAUTILUS_DEPLOY_HOST: ${{ vars.NAUTILUS_DEPLOY_HOST }}
+          NAUTILUS_DEPLOY_SSH_KEY: ${{ secrets.NAUTILUS_DEPLOY_SSH_KEY }}
+          NAUTILUS_DEPLOY_KNOWN_HOSTS: ${{ secrets.NAUTILUS_DEPLOY_KNOWN_HOSTS }}
+        run: python3 .github/scripts/publish.py

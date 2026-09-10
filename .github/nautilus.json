@@ -1,0 +1,13 @@
+{
+  "project": "portaria",
+  "branch": "main",
+  "services": {
+    "app": {
+      "image": "nautilus/portaria",
+      "context": ".",
+      "watch": [
+        "."
+      ]
+    }
+  }
+}

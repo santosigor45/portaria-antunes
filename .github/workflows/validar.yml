@@ -1,0 +1,25 @@
+name: Validações básicas
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portaria-validacoes-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validar:
+    name: Sintaxe e configuração na Oracle
+    runs-on: [self-hosted, Linux, ARM64, portaria-validacoes]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Validar sintaxe e arquivos de configuração
+        run: python3 .github/scripts/validate.py
