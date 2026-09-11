@@ -79,7 +79,7 @@
 {% block scripts %}
     <script>
         $(document).ready(function() {
-            setupVisitantesInput('nome', 'documento', 'empresa', JSON.parse('{{ visitantes | tojson | safe }}'));
+            setupVisitantesInput('nome', 'documento', 'empresa', {{ visitantes | tojson }});
             setupPlacaInput('placa');
             setupOnlyLetters('empresa');
         });

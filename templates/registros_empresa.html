@@ -119,7 +119,7 @@
 {% endblock %}
 {% block scripts %}
     <script>
-        all_placas = JSON.parse('{{ placas | tojson | safe }}');
+        all_placas = {{ placas | tojson }};
 
         $(document).ready(function() {
             setupMotoristaInput();
