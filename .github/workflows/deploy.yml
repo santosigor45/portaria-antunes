@@ -15,7 +15,49 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  tailscale_diagnostic:
+    name: Diagnóstico OIDC → Tailscale → Nautilus:22
+    if: >-
+      vars.NAUTILUS_DEPLOY_ENABLED != 'true' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Conectar ao Tailscale
+        uses: tailscale/github-action@780049a30b6ff5c378a9e7b389d15ece7a204888
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:deploy-portaria
+          version: 1.102.4
+
+      - name: Confirmar rota privada
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          getent hosts nautilus.tail67cfa0.ts.net
+          for attempt in {1..12}; do
+            if timeout 5 bash -c '</dev/tcp/nautilus.tail67cfa0.ts.net/22' 2>/dev/null; then
+              echo "OK: Nautilus acessível em TCP 22 via Tailscale."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "ERRO: Nautilus não ficou acessível em TCP 22 via Tailscale." >&2
+          exit 1
+
   publish:
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
     if: >-
       vars.NAUTILUS_DEPLOY_ENABLED == 'true' &&
       github.event.workflow_run.conclusion == 'success' &&
@@ -32,6 +74,29 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Conectar à Nautilus pelo Tailscale
+        uses: tailscale/github-action@780049a30b6ff5c378a9e7b389d15ece7a204888
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:deploy-portaria
+          version: 1.102.4
+
+      - name: Confirmar SSH privado da Nautilus
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for attempt in {1..12}; do
+            if timeout 5 bash -c '</dev/tcp/nautilus.tail67cfa0.ts.net/22' 2>/dev/null; then
+              echo "Nautilus acessível por TCP 22 via Tailscale."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Nautilus não ficou acessível por TCP 22 via Tailscale." >&2
+          exit 1
+
       - name: Construir imagens AMD64 e publicar pelo Dokploy
         env:
           RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
