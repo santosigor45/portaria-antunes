@@ -15,6 +15,64 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  ssh_diagnostic:
+    name: Diagnóstico SSH restrito via Tailscale
+    if: >-
+      vars.NAUTILUS_DEPLOY_ENABLED != 'true' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Conectar ao Tailscale
+        uses: tailscale/github-action@780049a30b6ff5c378a9e7b389d15ece7a204888
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:deploy-portaria
+          version: 1.102.4
+
+      - name: Validar chave e comando forçado da Portaria
+        shell: bash
+        env:
+          NAUTILUS_DEPLOY_HOST: ${{ vars.NAUTILUS_DEPLOY_HOST }}
+          NAUTILUS_DEPLOY_SSH_KEY: ${{ secrets.NAUTILUS_DEPLOY_SSH_KEY }}
+          NAUTILUS_DEPLOY_KNOWN_HOSTS: ${{ secrets.NAUTILUS_DEPLOY_KNOWN_HOSTS }}
+        run: |
+          set -Eeuo pipefail
+          umask 077
+          temp="$(mktemp -d)"
+          trap 'rm -rf "$temp"' EXIT
+
+          printf '%s\n' "$NAUTILUS_DEPLOY_SSH_KEY" > "$temp/key"
+          printf '%s\n' "$NAUTILUS_DEPLOY_KNOWN_HOSTS" > "$temp/known_hosts"
+
+          output="$(
+            ssh -i "$temp/key"               -o IdentitiesOnly=yes               -o BatchMode=yes               -o StrictHostKeyChecking=yes               -o UserKnownHostsFile="$temp/known_hosts"               -o ConnectTimeout=15               "root@$NAUTILUS_DEPLOY_HOST" current
+          )"
+
+          PROJECT="$(
+            OUTPUT="$output" python3 - <<'PY'
+          import json
+          import os
+          data = json.loads(os.environ["OUTPUT"])
+          print(data.get("project", ""))
+          PY
+          )"
+
+          if [[ "$PROJECT" != "portaria" ]]; then
+            echo "ERRO: receptor SSH respondeu por projeto inesperado." >&2
+            exit 1
+          fi
+
+          echo "OK: chave SSH restrita da Portaria autenticada via Tailscale e comando 'current' confirmado."
+
   publish:
     permissions:
       contents: read
